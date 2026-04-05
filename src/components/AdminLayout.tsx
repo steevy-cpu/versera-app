@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Outlet, NavLink, Link, Navigate } from "react-router-dom";
 import { BarChart3, Users, DollarSign, ArrowLeft, LogOut, MessageSquare, Menu, X, Sun, Moon } from "lucide-react";
+import { VLogoMark } from "@/components/VLogo";
 import { useMe } from "@/hooks/useAuth";
 import { getUser, logout } from "@/lib/auth";
 import { useTheme } from "@/components/ThemeToggle";
@@ -35,7 +36,8 @@ export default function AdminLayout() {
 
   const sidebarContent = (
     <>
-      <div className="px-5 py-5">
+      <div className="px-5 py-5 flex items-center gap-1.5">
+        <VLogoMark size={20} />
         <span className="text-xl font-bold tracking-tight text-[#ef4444]">
           Versera Admin
         </span>
@@ -105,7 +107,7 @@ export default function AdminLayout() {
         <button onClick={() => setSidebarOpen((v) => !v)} className="text-white/60 hover:text-white">
           {sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
-        <span className="text-sm font-bold text-[#ef4444]">Versera Admin</span>
+        <span className="text-sm font-bold text-[#ef4444] inline-flex items-center gap-1"><VLogoMark size={16} /> Versera Admin</span>
       </header>
 
       {sidebarOpen && (

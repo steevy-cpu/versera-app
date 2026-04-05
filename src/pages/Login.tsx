@@ -8,6 +8,7 @@ import { api } from "@/lib/api";
 import { saveToken, saveUser } from "@/lib/auth";
 import type { User } from "@/lib/types";
 import type { ApiError } from "@/lib/types";
+import { VLogoFull } from "@/components/VLogo";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -40,9 +41,9 @@ export default function Login() {
     <div className="flex min-h-screen items-center justify-center bg-background p-4">
       <Card className="w-full max-w-sm border shadow-sm">
         <CardContent className="pt-8 pb-6 px-6">
-          <div className="mb-8 text-center">
-            <Link to="/" className="text-2xl font-bold tracking-tight text-primary hover:opacity-80 transition-opacity">
-              Versera
+          <div className="mb-8 flex justify-center">
+            <Link to="/" className="hover:opacity-80 transition-opacity">
+              <VLogoFull size={32} />
             </Link>
           </div>
 

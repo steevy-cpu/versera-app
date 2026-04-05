@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, Copy, Check, Plus, X, Loader2, Menu, Sun, Moon } from "lucide-react";
 import { useTheme } from "@/components/ThemeToggle";
+import { VLogoFull } from "@/components/VLogo";
 
 const API_BASE =
   (import.meta.env.VITE_API_URL as string | undefined) ??
@@ -360,7 +361,7 @@ export default function Docs() {
         <button onClick={() => setDocsSidebarOpen((v) => !v)} className="text-zinc-400 hover:text-white">
           {docsSidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
-        <Link to="/" className="text-sm text-zinc-400 hover:text-white">versera.dev</Link>
+        <Link to="/" className="hover:opacity-80 transition-opacity"><VLogoFull size={20} /></Link>
       </header>
 
       {/* Overlay */}
@@ -373,7 +374,7 @@ export default function Docs() {
         <div className="p-5">
           <Link to="/" className="flex items-center gap-2 text-zinc-400 hover:text-white transition-colors mb-8">
             <ArrowLeft className="h-4 w-4" />
-            <span className="text-sm">versera.dev</span>
+            <VLogoFull size={24} />
           </Link>
           {NAV.map((section) => (
             <div key={section.label} className="mb-5">

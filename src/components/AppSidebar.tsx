@@ -4,6 +4,7 @@ import { useLocation } from "react-router-dom";
 import { useMe } from "@/hooks/useAuth";
 import { getUser, logout } from "@/lib/auth";
 import { useTheme } from "@/components/ThemeToggle";
+import { VLogoFull } from "@/components/VLogo";
 import {
   Sidebar,
   SidebarContent,
@@ -36,9 +37,7 @@ export function AppSidebar() {
   return (
     <Sidebar className="border-r border-sidebar-border">
       <div className="px-5 py-5">
-        <span className="text-xl font-bold tracking-tight text-sidebar-primary">
-          Versera
-        </span>
+        <VLogoFull size={24} />
       </div>
 
       <SidebarContent className="px-2">
