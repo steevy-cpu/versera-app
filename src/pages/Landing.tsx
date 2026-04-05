@@ -293,9 +293,9 @@ export default function Landing() {
             <motion.div
               key={f.title}
               variants={fadeUp}
-              className="rounded-lg border border-white/[0.06] bg-[#111] p-6"
+              className="rounded-lg border border-white/[0.06] bg-[#111] p-7"
             >
-              <div className="mb-4 flex h-9 w-9 items-center justify-center rounded-md bg-[#7F77DD]/15 text-[#7F77DD]">
+              <div className="mb-4 flex h-9 w-9 items-center justify-center rounded-md bg-[#7F77DD]/[0.15] border border-[#7F77DD]/30 text-[#7F77DD]">
                 <f.icon className="h-4.5 w-4.5" />
               </div>
               <h3 className="text-base font-semibold mb-2">{f.title}</h3>
