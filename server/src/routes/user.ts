@@ -1,5 +1,6 @@
 import { Router, Request, Response } from "express";
 import { PromptStatus } from "@prisma/client";
+import bcrypt from "bcrypt";
 import { requireAuth } from "../middleware/requireAuth";
 import { safeUser } from "../lib/safeUser";
 import prisma from "../lib/prisma";
@@ -86,6 +87,42 @@ router.get("/usage", async (req: Request, res: Response): Promise<void> => {
     abAssignments: 0,  // MVP placeholder
     logsSubmitted: 0,  // MVP placeholder
   });
+});
+
+// ─── PUT /v1/me/password ─────────────────────────────────────────────────────
+
+router.put("/password", async (req: Request, res: Response): Promise<void> => {
+  const user = req.user!;
+  const { currentPassword, newPassword } = req.body ?? {};
+
+  if (!currentPassword || !newPassword) {
+    res.status(400).json({ error: "currentPassword and newPassword are required" });
+    return;
+  }
+  if (typeof newPassword !== "string" || newPassword.length < 8) {
+    res.status(400).json({ error: "newPassword must be at least 8 characters" });
+    return;
+  }
+
+  const fresh = await prisma.user.findUnique({ where: { id: user.id } });
+  if (!fresh) {
+    res.status(404).json({ error: "User not found" });
+    return;
+  }
+
+  const valid = await bcrypt.compare(currentPassword, fresh.passwordHash);
+  if (!valid) {
+    res.status(401).json({ error: "Current password is incorrect" });
+    return;
+  }
+
+  const hashedPassword = await bcrypt.hash(newPassword, 12);
+  await prisma.user.update({
+    where: { id: user.id },
+    data: { passwordHash: hashedPassword },
+  });
+
+  res.json({ message: "Password updated" });
 });
 
 // ─── DELETE /v1/me ───────────────────────────────────────────────────────────

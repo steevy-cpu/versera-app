@@ -10,6 +10,7 @@ import resolveRoutes from "./routes/resolve";
 import apiKeyRoutes from "./routes/apiKeys";
 import billingRoutes, { stripeWebhook } from "./routes/billing";
 import adminRoutes from "./routes/admin";
+import testimonialRoutes from "./routes/testimonials";
 
 const app = express();
 const PORT = process.env.PORT ?? 3001;
@@ -58,6 +59,7 @@ app.use("/v1/resolve", resolveRoutes);
 app.use("/v1/api-keys", apiKeyRoutes);
 app.use("/v1/billing", billingRoutes);
 app.use("/v1/admin", adminRoutes);
+app.use("/v1/testimonials", testimonialRoutes);
 
 // ─── Health check ─────────────────────────────────────────────────────────────
 
