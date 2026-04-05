@@ -1,7 +1,10 @@
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
   Table,
   TableBody,
@@ -11,17 +14,30 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { formatDistanceToNow } from "date-fns";
+import { CheckCircle2, Info, Loader2 } from "lucide-react";
 import { useMe, useUsage } from "@/hooks/useAuth";
 import { usePlans, useTransactions, useCheckout } from "@/hooks/useBilling";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 
 export default function Billing() {
-  const { toast } = useToast();
-  const { data: user, isLoading: userLoading } = useMe();
+  const [searchParams] = useSearchParams();
+  const [buyingPlan, setBuyingPlan] = useState<string | null>(null);
+  const { data: user, isLoading: userLoading, refetch: refetchUser } = useMe();
   const { data: usage, isLoading: usageLoading } = useUsage();
   const { data: plans, isLoading: plansLoading } = usePlans();
-  const { data: transactions, isLoading: txLoading } = useTransactions();
-  const { mutate: checkout, isPending: isCheckingOut } = useCheckout();
+  const { data: transactions, isLoading: txLoading, refetch: refetchTx } = useTransactions();
+  const { mutate: checkout } = useCheckout();
+
+  const isSuccess = searchParams.get("success") === "true";
+  const isCancelled = searchParams.get("cancelled") === "true";
+
+  // Refresh data when returning from successful checkout
+  useEffect(() => {
+    if (isSuccess) {
+      refetchUser();
+      refetchTx();
+    }
+  }, [isSuccess, refetchUser, refetchTx]);
 
   const usagePercent =
     user ? (user.credits / Math.max(user.totalCredits, 1)) * 100 : 0;
@@ -33,22 +49,43 @@ export default function Billing() {
   ];
 
   const handleBuy = (planKey: string) => {
+    setBuyingPlan(planKey);
     checkout(planKey, {
       onSuccess: (data) => {
-        toast({ title: data.message });
+        if (data.checkoutUrl) {
+          window.location.href = data.checkoutUrl;
+        }
       },
-      onError: (err) =>
-        toast({
-          title: "Checkout failed",
+      onError: (err) => {
+        setBuyingPlan(null);
+        toast.error("Checkout failed", {
           description: (err as { message: string }).message,
-          variant: "destructive",
-        }),
+        });
+      },
     });
   };
 
   return (
     <div className="space-y-8">
       <h1 className="text-2xl font-semibold tracking-tight">Billing & Credits</h1>
+
+      {isSuccess && (
+        <Alert className="border-green-500/50 bg-green-500/10">
+          <CheckCircle2 className="h-4 w-4 text-green-600" />
+          <AlertDescription className="text-green-700">
+            Payment successful! Your credits have been added to your account.
+          </AlertDescription>
+        </Alert>
+      )}
+
+      {isCancelled && (
+        <Alert className="border-muted bg-muted/50">
+          <Info className="h-4 w-4 text-muted-foreground" />
+          <AlertDescription className="text-muted-foreground">
+            Payment cancelled. No charges were made.
+          </AlertDescription>
+        </Alert>
+      )}
 
       {/* Credit balance */}
       <Card className="shadow-none">
@@ -119,10 +156,14 @@ export default function Billing() {
                   <Button
                     variant={plan.featured ? "default" : "outline"}
                     className="w-full"
-                    disabled={isCheckingOut}
+                    disabled={buyingPlan !== null}
                     onClick={() => handleBuy(plan.key)}
                   >
-                    Buy
+                    {buyingPlan === plan.key ? (
+                      <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Processing…</>
+                    ) : (
+                      "Buy"
+                    )}
                   </Button>
                 </CardContent>
               </Card>
