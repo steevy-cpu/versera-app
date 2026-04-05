@@ -66,7 +66,7 @@ export default function Dashboard() {
       {showOnboarding && (
         <OnboardingModal onClose={() => setShowOnboarding(false)} />
       )}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <h1 className="text-2xl font-semibold tracking-tight">
           {greeting}, {user?.name ?? "there"}
         </h1>
@@ -95,15 +95,15 @@ export default function Dashboard() {
 
       <div>
         <h2 className="mb-4 text-lg font-semibold">Recent Prompts</h2>
-        <Card className="shadow-none overflow-hidden">
+        <Card className="shadow-none overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow className="hover:bg-transparent">
                 <TableHead>Name</TableHead>
-                <TableHead>Latest Version</TableHead>
+                <TableHead className="hidden sm:table-cell">Latest Version</TableHead>
                 <TableHead>Environment</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Last Updated</TableHead>
+                <TableHead className="hidden sm:table-cell">Status</TableHead>
+                <TableHead className="hidden md:table-cell">Last Updated</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -127,7 +127,7 @@ export default function Dashboard() {
                     <TableCell className="font-mono text-sm font-medium">
                       {p.name}
                     </TableCell>
-                    <TableCell className="font-mono text-sm">
+                    <TableCell className="font-mono text-sm hidden sm:table-cell">
                       v{p.latestVersion ?? "—"}
                     </TableCell>
                     <TableCell>
@@ -135,12 +135,12 @@ export default function Dashboard() {
                         {p.environment}
                       </Badge>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="hidden sm:table-cell">
                       <Badge variant="secondary" className={statusColor(p.status)}>
                         {p.status === "ACTIVE" ? "Active" : "Draft"}
                       </Badge>
                     </TableCell>
-                    <TableCell className="text-muted-foreground text-sm">
+                    <TableCell className="text-muted-foreground text-sm hidden md:table-cell">
                       {p.lastUpdated
                         ? formatDistanceToNow(new Date(p.lastUpdated), { addSuffix: true })
                         : formatDistanceToNow(new Date(p.updatedAt), { addSuffix: true })}

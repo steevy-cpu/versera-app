@@ -49,16 +49,16 @@ export default function AdminUsers() {
         <p className="text-sm" style={{ color: "#E24B4A" }}>Failed to load users.</p>
       )}
 
-      <Card className="shadow-none overflow-hidden">
+      <Card className="shadow-none overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent">
               <TableHead>Name</TableHead>
-              <TableHead>Email</TableHead>
+              <TableHead className="hidden sm:table-cell">Email</TableHead>
               <TableHead>Credits</TableHead>
-              <TableHead>Total spent</TableHead>
-              <TableHead>Prompts</TableHead>
-              <TableHead>Joined</TableHead>
+              <TableHead className="hidden md:table-cell">Total spent</TableHead>
+              <TableHead className="hidden md:table-cell">Prompts</TableHead>
+              <TableHead className="hidden lg:table-cell">Joined</TableHead>
               <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -75,11 +75,11 @@ export default function AdminUsers() {
               filtered.map((u) => (
                 <TableRow key={u.id}>
                   <TableCell className="font-medium">{u.name}</TableCell>
-                  <TableCell className="text-muted-foreground">{u.email}</TableCell>
+                  <TableCell className="text-muted-foreground hidden sm:table-cell">{u.email}</TableCell>
                   <TableCell>{u.credits.toLocaleString()}</TableCell>
-                  <TableCell>{cents(u.totalSpentCents)}</TableCell>
-                  <TableCell>{u.promptCount}</TableCell>
-                  <TableCell className="text-muted-foreground text-sm">
+                  <TableCell className="hidden md:table-cell">{cents(u.totalSpentCents)}</TableCell>
+                  <TableCell className="hidden md:table-cell">{u.promptCount}</TableCell>
+                  <TableCell className="text-muted-foreground text-sm hidden lg:table-cell">
                     {format(new Date(u.createdAt), "MMM d, yyyy")}
                   </TableCell>
                   <TableCell>

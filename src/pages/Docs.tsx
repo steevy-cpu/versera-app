@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Copy, Check, Plus, X, Loader2 } from "lucide-react";
+import { ArrowLeft, Copy, Check, Plus, X, Loader2, Menu } from "lucide-react";
 
 const API_BASE =
   (import.meta.env.VITE_API_URL as string | undefined) ??
@@ -324,6 +324,7 @@ function ApiTester() {
 /* ------------------------------------------------------------------ */
 export default function Docs() {
   const [activeId, setActiveId] = useState("quick-start");
+  const [docsSidebarOpen, setDocsSidebarOpen] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
 
   // Intersection observer for active nav
@@ -352,8 +353,21 @@ export default function Docs() {
 
   return (
     <div className="flex min-h-screen font-sans antialiased">
+      {/* Mobile docs header */}
+      <header className="fixed top-0 inset-x-0 z-50 flex h-12 items-center gap-3 border-b border-white/[0.06] bg-[#0f0f0f] px-4 md:hidden">
+        <button onClick={() => setDocsSidebarOpen((v) => !v)} className="text-zinc-400 hover:text-white">
+          {docsSidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        </button>
+        <Link to="/" className="text-sm text-zinc-400 hover:text-white">versera.dev</Link>
+      </header>
+
+      {/* Overlay */}
+      {docsSidebarOpen && (
+        <div className="fixed inset-0 z-40 bg-black/50 md:hidden" onClick={() => setDocsSidebarOpen(false)} />
+      )}
+
       {/* ====== SIDEBAR ====== */}
-      <aside className="fixed top-0 left-0 bottom-0 w-[260px] bg-[#0f0f0f] border-r border-white/[0.06] overflow-y-auto z-40 hidden md:block">
+      <aside className={`fixed top-0 left-0 bottom-0 w-[260px] bg-[#0f0f0f] border-r border-white/[0.06] overflow-y-auto z-50 transition-transform duration-200 md:translate-x-0 ${docsSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}>
         <div className="p-5">
           <Link to="/" className="flex items-center gap-2 text-zinc-400 hover:text-white transition-colors mb-8">
             <ArrowLeft className="h-4 w-4" />
@@ -367,7 +381,7 @@ export default function Docs() {
               {section.items.map((item) => (
                 <button
                   key={item.id}
-                  onClick={() => scrollTo(item.id)}
+                  onClick={() => { scrollTo(item.id); setDocsSidebarOpen(false); }}
                   className={`block w-full text-left px-3 py-1.5 rounded-md text-sm transition-colors mb-0.5 ${
                     activeId === item.id
                       ? "text-[#7F77DD] border-l-2 border-[#7F77DD] bg-[#7F77DD]/5"
@@ -383,8 +397,8 @@ export default function Docs() {
       </aside>
 
       {/* ====== CONTENT ====== */}
-      <div ref={contentRef} className="flex-1 md:ml-[260px] bg-white min-h-screen overflow-y-auto">
-        <div className="max-w-[780px] mx-auto px-6 md:px-12 py-12" style={{ lineHeight: 1.8 }}>
+      <div ref={contentRef} className="flex-1 md:ml-[260px] bg-white min-h-screen overflow-y-auto pt-12 md:pt-0">
+        <div className="max-w-[780px] mx-auto px-4 sm:px-6 md:px-12 py-12" style={{ lineHeight: 1.8 }}>
 
           {/* ── QUICK START ── */}
           <SectionHeading id="quick-start">Quick start</SectionHeading>
