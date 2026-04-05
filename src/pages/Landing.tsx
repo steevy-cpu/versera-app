@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useRef, useState } from "react";
+import { Menu, X as XIcon } from "lucide-react";
 import {
   GitBranch,
   ArrowUpRight,
