@@ -170,7 +170,10 @@ export default function Landing() {
       </nav>
 
       {/* ====== HERO ====== */}
-      <Section className="flex min-h-screen flex-col items-center justify-center px-5 pt-14 text-center">
+      <Section className="relative flex min-h-[85vh] flex-col items-center justify-center px-5 pt-14 text-center">
+        {/* Subtle radial glow behind hero */}
+        <div className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[600px] w-[600px] rounded-full bg-[#7F77DD]/[0.15] blur-[120px]" />
+
         <motion.div
           variants={fadeUp}
           className="mb-6 inline-flex items-center rounded-full border border-[#7F77DD]/30 bg-[#7F77DD]/10 px-4 py-1.5 text-xs font-medium text-[#7F77DD]"
