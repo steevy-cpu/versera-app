@@ -142,6 +142,7 @@ function envBadgeClass(env: string) {
 /* ================================================================== */
 export default function Landing() {
   const codeRef = useRef<HTMLPreElement>(null);
+  const [mobileNav, setMobileNav] = useState(false);
 
   const copyCode = () => {
     const text = codeLines.map((l) => l.text).join("\n");
@@ -156,8 +157,8 @@ export default function Landing() {
           <Link to="/" className="text-lg font-bold tracking-tight text-[#7F77DD]">
             Versera
           </Link>
-          <div className="flex items-center gap-5 text-sm">
-            <Link to="/docs" className="hidden sm:inline text-zinc-400 hover:text-white transition-colors">
+          <div className="hidden sm:flex items-center gap-5 text-sm">
+            <Link to="/docs" className="text-zinc-400 hover:text-white transition-colors">
               Documentation
             </Link>
             <Link to="/login" className="text-zinc-400 hover:text-white transition-colors">
@@ -170,7 +171,17 @@ export default function Landing() {
               Get started free
             </Link>
           </div>
+          <button className="sm:hidden text-zinc-400 hover:text-white" onClick={() => setMobileNav((v) => !v)}>
+            {mobileNav ? <XIcon className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
         </div>
+        {mobileNav && (
+          <div className="sm:hidden border-t border-white/[0.06] bg-[#0a0a0a]/95 backdrop-blur-md px-5 py-4 space-y-3">
+            <Link to="/docs" onClick={() => setMobileNav(false)} className="block text-sm text-zinc-400 hover:text-white transition-colors">Documentation</Link>
+            <Link to="/login" onClick={() => setMobileNav(false)} className="block text-sm text-zinc-400 hover:text-white transition-colors">Sign in</Link>
+            <Link to="/signup" onClick={() => setMobileNav(false)} className="block rounded-md bg-[#7F77DD] px-3.5 py-1.5 text-sm font-medium text-white hover:bg-[#6e66cc] transition-colors text-center">Get started free</Link>
+          </div>
+        )}
       </nav>
 
       {/* ====== HERO ====== */}
