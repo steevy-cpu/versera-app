@@ -661,10 +661,9 @@ function TestimonialsSection() {
             >
               <div className="flex gap-0.5 mb-3">
                 {Array.from({ length: 5 }).map((_, i) => (
-                  <Star
-                    key={i}
-                    className={`h-4 w-4 ${i < t.rating ? "fill-amber-400 text-amber-400" : "text-zinc-600"}`}
-                  />
+                  <span key={i} className="text-base" style={{ color: i < t.rating ? "#EF9F27" : undefined }}>
+                    {i < t.rating ? "★" : <span className="text-zinc-600">★</span>}
+                  </span>
                 ))}
               </div>
               <p className="text-sm text-zinc-300 leading-relaxed mb-4">"{t.content}"</p>

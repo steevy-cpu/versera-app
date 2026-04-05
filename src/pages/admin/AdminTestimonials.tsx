@@ -75,10 +75,9 @@ export default function AdminTestimonials() {
                   <td className="px-4 py-3 hidden md:table-cell">
                     <div className="flex gap-0.5">
                       {Array.from({ length: 5 }).map((_, i) => (
-                        <Star
-                          key={i}
-                          className={`h-3.5 w-3.5 ${i < t.rating ? "fill-amber-400 text-amber-400" : "text-zinc-600"}`}
-                        />
+                        <span key={i} className="text-sm" style={{ color: i < t.rating ? "#EF9F27" : undefined }}>
+                          {i < t.rating ? "★" : <span className="text-zinc-600">★</span>}
+                        </span>
                       ))}
                     </div>
                   </td>
