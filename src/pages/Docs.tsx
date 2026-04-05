@@ -357,7 +357,7 @@ export default function Docs() {
         <div className="p-5">
           <Link to="/" className="flex items-center gap-2 text-zinc-400 hover:text-white transition-colors mb-8">
             <ArrowLeft className="h-4 w-4" />
-            <span className="text-lg font-bold text-[#7F77DD]">Docs</span>
+            <span className="text-sm">versera.dev</span>
           </Link>
           {NAV.map((section) => (
             <div key={section.label} className="mb-5">
