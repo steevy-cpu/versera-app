@@ -3,6 +3,7 @@ import { PromptStatus } from "@prisma/client";
 import { requireAuth } from "../middleware/requireAuth";
 import { safeUser } from "../lib/safeUser";
 import prisma from "../lib/prisma";
+import { sendAccountDeletionEmail } from "../lib/email";
 
 const router = Router();
 
@@ -85,6 +86,38 @@ router.get("/usage", async (req: Request, res: Response): Promise<void> => {
     abAssignments: 0,  // MVP placeholder
     logsSubmitted: 0,  // MVP placeholder
   });
+});
+
+// ─── DELETE /v1/me ───────────────────────────────────────────────────────────
+
+router.delete("/", async (req: Request, res: Response): Promise<void> => {
+  const user = req.user!;
+  const { confirmation } = req.body ?? {};
+
+  if (confirmation !== "DELETE") {
+    res.status(400).json({ error: 'confirmation must be the string "DELETE"' });
+    return;
+  }
+
+  // Send email before deletion while we still have the address
+  await sendAccountDeletionEmail(user.email, user.name);
+
+  // Delete all user data in dependency order
+  const userPrompts = await prisma.prompt.findMany({
+    where: { userId: user.id },
+    select: { id: true },
+  });
+  const promptIds = userPrompts.map((p) => p.id);
+
+  await prisma.$transaction([
+    prisma.promptVersion.deleteMany({ where: { promptId: { in: promptIds } } }),
+    prisma.prompt.deleteMany({ where: { userId: user.id } }),
+    prisma.apiKey.deleteMany({ where: { userId: user.id } }),
+    prisma.transaction.deleteMany({ where: { userId: user.id } }),
+    prisma.user.delete({ where: { id: user.id } }),
+  ]);
+
+  res.status(204).send();
 });
 
 export default router;

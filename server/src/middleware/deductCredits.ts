@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import prisma from "../lib/prisma";
+import { sendLowCreditsEmail } from "../lib/email";
 
 /**
  * Factory middleware. Deducts `cost` credits from req.user atomically.
@@ -40,7 +41,14 @@ export function deductCredits(cost: number) {
     }
 
     // Keep req.user in sync so downstream handlers see the updated balance
-    req.user = { ...user, credits: user.credits - cost };
+    const newBalance = user.credits - cost;
+    req.user = { ...user, credits: newBalance };
+
+    // Fire low-credits email exactly once as the balance crosses below 100
+    if (newBalance <= 100 && user.credits > 100) {
+      sendLowCreditsEmail(user.email, user.name, newBalance)
+        .catch(err => console.error('Low credits email failed:', err));
+    }
 
     next();
   };

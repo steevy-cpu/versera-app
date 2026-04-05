@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import prisma from "../lib/prisma";
 import { safeUser } from "../lib/safeUser";
+import { sendWelcomeEmail } from "../lib/email";
 
 const router = Router();
 
@@ -60,6 +61,9 @@ router.post("/register", async (req: Request, res: Response): Promise<void> => {
   });
 
   const token = signToken(user.id);
+
+  sendWelcomeEmail(user.email, user.name)
+    .catch(err => console.error('Welcome email failed:', err));
 
   res.status(201).json({ user: safeUser(user), token });
 });
