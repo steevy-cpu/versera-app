@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
 import { getUser } from "@/lib/auth";
@@ -16,6 +17,7 @@ import {
 import { Plus } from "lucide-react";
 import { useStats } from "@/hooks/useAuth";
 import { usePrompts } from "@/hooks/usePrompts";
+import OnboardingModal, { ONBOARDING_KEY } from "@/components/OnboardingModal";
 
 function envColor(env: string) {
   switch (env) {
@@ -36,6 +38,18 @@ export default function Dashboard() {
   const { data: stats, isLoading: statsLoading } = useStats();
   const { data: prompts, isLoading: promptsLoading } = usePrompts();
   const user = getUser();
+  const [showOnboarding, setShowOnboarding] = useState(false);
+
+  useEffect(() => {
+    if (
+      !promptsLoading &&
+      prompts &&
+      prompts.length === 0 &&
+      !localStorage.getItem(ONBOARDING_KEY)
+    ) {
+      setShowOnboarding(true);
+    }
+  }, [prompts, promptsLoading]);
 
   const hour = new Date().getHours();
   const greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
@@ -49,6 +63,9 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-8">
+      {showOnboarding && (
+        <OnboardingModal onClose={() => setShowOnboarding(false)} />
+      )}
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold tracking-tight">
           {greeting}, {user?.name ?? "there"}

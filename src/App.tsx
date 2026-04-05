@@ -14,6 +14,9 @@ import Versions from "@/pages/Versions";
 import ApiKeys from "@/pages/ApiKeys";
 import Billing from "@/pages/Billing";
 import Docs from "@/pages/Docs";
+import Terms from "@/pages/Terms";
+import Privacy from "@/pages/Privacy";
+import CookiesPage from "@/pages/CookiesPage";
 import NotFound from "@/pages/NotFound";
 import { isAuthenticated } from "@/lib/auth";
 
@@ -33,6 +36,9 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/docs" element={<Docs />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/cookies" element={<CookiesPage />} />
 
           {/* Redirect logged-in users away from /login */}
           <Route
