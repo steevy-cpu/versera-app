@@ -12,17 +12,63 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, Lock } from "lucide-react";
 
 export default function Settings() {
   const cached = getUser();
   const { data: user } = useMe();
   const display = user ?? cached;
 
+  // Delete account state
   const [open, setOpen] = useState(false);
   const [confirmation, setConfirmation] = useState("");
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState("");
+
+  // Change password state
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [pwLoading, setPwLoading] = useState(false);
+  const [pwError, setPwError] = useState("");
+  const [pwSuccess, setPwSuccess] = useState("");
+
+  const handlePasswordChange = async () => {
+    setPwError("");
+    setPwSuccess("");
+
+    if (newPassword.length < 8) {
+      setPwError("Password must be at least 8 characters");
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      setPwError("Passwords don't match");
+      return;
+    }
+
+    setPwLoading(true);
+    try {
+      await api.put("/v1/me/password", {
+        currentPassword,
+        newPassword,
+      });
+      setPwSuccess("Password updated successfully");
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+    } catch (err: unknown) {
+      const apiErr = err as { message?: string; status?: number } | undefined;
+      if (apiErr?.status === 404) {
+        setPwError("Feature coming soon");
+      } else if (apiErr?.status === 401) {
+        setPwError("Current password is incorrect");
+      } else {
+        setPwError(apiErr?.message ?? "Something went wrong. Please try again.");
+      }
+    } finally {
+      setPwLoading(false);
+    }
+  };
 
   const handleDelete = async () => {
     setDeleting(true);
@@ -32,7 +78,6 @@ export default function Settings() {
       localStorage.clear();
       setConfirmation("");
       setOpen(false);
-      // Brief goodbye message then redirect
       document.body.innerHTML =
         '<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0a0a0a;color:white;font-family:sans-serif;font-size:1.125rem;">Account deleted. Goodbye.</div>';
       setTimeout(() => {
@@ -71,6 +116,65 @@ export default function Settings() {
                 To update your profile contact hello@versera.dev
               </p>
             </div>
+          </CardContent>
+        </Card>
+      </section>
+
+      {/* Security — Change password */}
+      <section className="space-y-3">
+        <h2 className="text-lg font-semibold">Security</h2>
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-base">
+              <Lock className="h-4 w-4" />
+              Change password
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Current password</label>
+              <Input
+                type="password"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                placeholder="Enter current password"
+                autoComplete="current-password"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">New password</label>
+              <Input
+                type="password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                placeholder="Min 8 characters"
+                autoComplete="new-password"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Confirm new password</label>
+              <Input
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="Confirm new password"
+                autoComplete="new-password"
+              />
+            </div>
+
+            {pwError && (
+              <p className="text-sm text-destructive">{pwError}</p>
+            )}
+            {pwSuccess && (
+              <p className="text-sm text-emerald-500">{pwSuccess}</p>
+            )}
+
+            <Button
+              onClick={handlePasswordChange}
+              disabled={pwLoading || !currentPassword || !newPassword || !confirmPassword}
+            >
+              {pwLoading ? "Updating..." : "Update password"}
+            </Button>
           </CardContent>
         </Card>
       </section>
