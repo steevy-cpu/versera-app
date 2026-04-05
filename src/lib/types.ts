@@ -7,6 +7,7 @@ export interface User {
   avatar: string;
   credits: number;
   totalCredits: number;
+  isAdmin?: boolean;
   createdAt: string;
   updatedAt: string;
 }

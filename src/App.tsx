@@ -19,6 +19,11 @@ import Terms from "@/pages/Terms";
 import Privacy from "@/pages/Privacy";
 import CookiesPage from "@/pages/CookiesPage";
 import NotFound from "@/pages/NotFound";
+import AdminLayout from "@/components/AdminLayout";
+import AdminOverview from "@/pages/admin/AdminOverview";
+import AdminUsers from "@/pages/admin/AdminUsers";
+import AdminUserDetail from "@/pages/admin/AdminUserDetail";
+import AdminRevenue from "@/pages/admin/AdminRevenue";
 import { isAuthenticated } from "@/lib/auth";
 
 const queryClient = new QueryClient();
@@ -61,6 +66,14 @@ const App = () => (
               <Route path="/api-keys" element={<ApiKeys />} />
               <Route path="/billing" element={<Billing />} />
               <Route path="/settings" element={<Settings />} />
+            </Route>
+
+            {/* Admin routes — AdminLayout handles its own isAdmin check */}
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<AdminOverview />} />
+              <Route path="users" element={<AdminUsers />} />
+              <Route path="users/:id" element={<AdminUserDetail />} />
+              <Route path="revenue" element={<AdminRevenue />} />
             </Route>
           </Route>
 
