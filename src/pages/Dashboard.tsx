@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
+import { getUser } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -34,6 +35,10 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const { data: stats, isLoading: statsLoading } = useStats();
   const { data: prompts, isLoading: promptsLoading } = usePrompts();
+  const user = getUser();
+
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
 
   const metricCards = [
     { label: "Total Prompts", value: stats?.totalPrompts },
@@ -45,7 +50,9 @@ export default function Dashboard() {
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold tracking-tight">Dashboard</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">
+          {greeting}, {user?.name ?? "there"}
+        </h1>
         <Button onClick={() => navigate("/prompts")} size="sm">
           <Plus className="mr-1.5 h-4 w-4" />
           New Prompt
