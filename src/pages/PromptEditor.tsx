@@ -8,6 +8,12 @@ import { prompts } from "@/mock/prompts";
 
 const envTabs = ["dev", "staging", "prod"] as const;
 
+const envTemplates: Record<string, string> = {
+  dev: `[DRAFT] Summarize the following document in {{tone}} style.\n\nTesting new approach for: {{focus_areas}}\n\n{{document}}`,
+  staging: `Summarize the following document in {{tone}} style.\n\nFocus on: {{focus_areas}}\n\nKeep it under {{max_words}} words.\n\nDocument: {{document}}`,
+  prod: `Summarize the following document in {{tone}} style.\n\nFocus on: {{focus_areas}}\n\nMaximum length: {{max_words}} words\n\nDocument:\n{{document}}`,
+};
+
 function HighlightedTemplate({ text }: { text: string }) {
   const parts = text.split(/({{[^}]+}})/g);
   return (
@@ -28,7 +34,7 @@ export default function PromptEditor() {
   const navigate = useNavigate();
   const prompt = prompts.find((p) => p.id === id) ?? prompts[0];
   const [activeEnv, setActiveEnv] = useState(prompt.environment);
-  const [template, setTemplate] = useState(prompt.template);
+  const [template, setTemplate] = useState(envTemplates[prompt.environment] ?? prompt.template);
 
   const variables = useMemo(() => {
     const matches = template.match(/{{(\w+)}}/g);
@@ -54,11 +60,14 @@ export default function PromptEditor() {
         {envTabs.map((env) => (
           <button
             key={env}
-            onClick={() => setActiveEnv(env)}
+            onClick={() => {
+              setActiveEnv(env);
+              setTemplate(envTemplates[env] ?? prompt.template);
+            }}
             className={`rounded-md px-4 py-1.5 text-sm font-medium capitalize transition-colors ${
               activeEnv === env
-                ? "bg-primary text-primary-foreground"
-                : "text-muted-foreground hover:text-foreground"
+                ? "bg-primary text-primary-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground hover:bg-background/50"
             }`}
           >
             {env}
