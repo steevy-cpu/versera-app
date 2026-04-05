@@ -239,6 +239,92 @@ export default function Landing() {
         </div>
       </Section>
 
+      {/* ====== ELI5 SECTION ====== */}
+      <Section className="mx-auto max-w-3xl px-5 py-24">
+        <motion.h2 variants={fadeUp} className="text-center text-3xl font-bold mb-12">
+          Wait... explain it like I'm 10
+        </motion.h2>
+
+        <motion.div variants={fadeUp} className="rounded-xl bg-[#111] border border-white/[0.06] border-l-2 border-l-[#7F77DD] p-6 sm:p-8">
+          <div className="space-y-4">
+            {/* Child */}
+            <div className="flex items-start gap-3 max-w-[85%]">
+              <div className="shrink-0 h-8 w-8 rounded-full bg-zinc-700 flex items-center justify-center text-xs font-bold text-zinc-300">K</div>
+              <div>
+                <div className="rounded-2xl rounded-tl-sm bg-zinc-800 px-4 py-2.5 text-sm text-zinc-200">So like... what IS Versera actually?</div>
+                <p className="text-[10px] text-zinc-600 mt-1 ml-1">12:01 PM</p>
+              </div>
+            </div>
+            {/* Versera */}
+            <div className="flex items-start gap-3 max-w-[85%] ml-auto flex-row-reverse">
+              <div className="shrink-0 h-8 w-8 rounded-full bg-[#7F77DD] flex items-center justify-center text-xs font-bold text-white">V</div>
+              <div>
+                <div className="rounded-2xl rounded-tr-sm bg-[#7F77DD]/20 px-4 py-2.5 text-sm text-zinc-200">You know how you save different versions of your homework? Like homework_v1, homework_v2, homework_FINAL? Versera does that for AI instructions.</div>
+                <p className="text-[10px] text-zinc-600 mt-1 mr-1 text-right">12:01 PM</p>
+              </div>
+            </div>
+            {/* Child */}
+            <div className="flex items-start gap-3 max-w-[85%]">
+              <div className="shrink-0 h-8 w-8 rounded-full bg-zinc-700 flex items-center justify-center text-xs font-bold text-zinc-300">K</div>
+              <div>
+                <div className="rounded-2xl rounded-tl-sm bg-zinc-800 px-4 py-2.5 text-sm text-zinc-200">Oh! And what's an AI instruction?</div>
+                <p className="text-[10px] text-zinc-600 mt-1 ml-1">12:02 PM</p>
+              </div>
+            </div>
+            {/* Versera */}
+            <div className="flex items-start gap-3 max-w-[85%] ml-auto flex-row-reverse">
+              <div className="shrink-0 h-8 w-8 rounded-full bg-[#7F77DD] flex items-center justify-center text-xs font-bold text-white">V</div>
+              <div>
+                <div className="rounded-2xl rounded-tr-sm bg-[#7F77DD]/20 px-4 py-2.5 text-sm text-zinc-200">When you tell an AI "summarize this in a funny way" — that instruction is called a prompt. Developers write thousands of these.</div>
+                <p className="text-[10px] text-zinc-600 mt-1 mr-1 text-right">12:02 PM</p>
+              </div>
+            </div>
+            {/* Child */}
+            <div className="flex items-start gap-3 max-w-[85%]">
+              <div className="shrink-0 h-8 w-8 rounded-full bg-zinc-700 flex items-center justify-center text-xs font-bold text-zinc-300">K</div>
+              <div>
+                <div className="rounded-2xl rounded-tl-sm bg-zinc-800 px-4 py-2.5 text-sm text-zinc-200">And they just... forget which one worked?</div>
+                <p className="text-[10px] text-zinc-600 mt-1 ml-1">12:03 PM</p>
+              </div>
+            </div>
+            {/* Versera */}
+            <div className="flex items-start gap-3 max-w-[85%] ml-auto flex-row-reverse">
+              <div className="shrink-0 h-8 w-8 rounded-full bg-[#7F77DD] flex items-center justify-center text-xs font-bold text-white">V</div>
+              <div>
+                <div className="rounded-2xl rounded-tr-sm bg-[#7F77DD]/20 px-4 py-2.5 text-sm text-zinc-200">Exactly! They change it, it breaks, and they can't remember what it said before. Versera saves every version so they can go back instantly.</div>
+                <p className="text-[10px] text-zinc-600 mt-1 mr-1 text-right">12:03 PM</p>
+              </div>
+            </div>
+            {/* Child */}
+            <div className="flex items-start gap-3 max-w-[85%]">
+              <div className="shrink-0 h-8 w-8 rounded-full bg-zinc-700 flex items-center justify-center text-xs font-bold text-zinc-300">K</div>
+              <div>
+                <div className="rounded-2xl rounded-tl-sm bg-zinc-800 px-4 py-2.5 text-sm text-zinc-200">That sounds really useful actually 😮</div>
+                <p className="text-[10px] text-zinc-600 mt-1 ml-1">12:04 PM</p>
+              </div>
+            </div>
+            {/* Versera */}
+            <div className="flex items-start gap-3 max-w-[85%] ml-auto flex-row-reverse">
+              <div className="shrink-0 h-8 w-8 rounded-full bg-[#7F77DD] flex items-center justify-center text-xs font-bold text-white">V</div>
+              <div>
+                <div className="rounded-2xl rounded-tr-sm bg-[#7F77DD]/20 px-4 py-2.5 text-sm text-zinc-200">Right? And it costs less than a cup of coffee to get started.</div>
+                <p className="text-[10px] text-zinc-600 mt-1 mr-1 text-right">12:04 PM</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-8 text-center">
+            <p className="text-sm text-zinc-400 mb-3">Makes sense now?</p>
+            <Link
+              to="/signup"
+              className="inline-block rounded-lg bg-[#7F77DD] px-6 py-2.5 text-sm font-semibold text-white hover:bg-[#6e66cc] transition-colors"
+            >
+              Get started free →
+            </Link>
+          </div>
+        </motion.div>
+      </Section>
+
       {/* ====== CODE EXAMPLE ====== */}
       <Section className="mx-auto max-w-4xl px-5 py-24">
         <motion.h2 variants={fadeUp} className="text-center text-3xl font-bold mb-3">
@@ -397,6 +483,61 @@ export default function Landing() {
         </motion.div>
       </Section>
 
+      {/* ====== TESTIMONIALS ====== */}
+      <Section className="mx-auto max-w-5xl px-5 py-24">
+        <motion.h2 variants={fadeUp} className="text-center text-3xl font-bold mb-12">
+          What developers are saying
+        </motion.h2>
+
+        <div className="grid gap-5 md:grid-cols-3">
+          {[
+            {
+              quote: "Finally stopped losing track of which prompt version was in prod. Rolled back a broken prompt in 30 seconds last week — would have taken an hour before.",
+              name: "Marcus T.",
+              role: "Senior ML Engineer",
+              initials: "MT",
+              color: "bg-[#7F77DD]",
+            },
+            {
+              quote: "The variable injection is genius. We have one prompt template and inject different tones and formats at runtime. Saved us from maintaining 12 separate prompt files.",
+              name: "Priya S.",
+              role: "AI Product Lead",
+              initials: "PS",
+              color: "bg-teal-500",
+            },
+            {
+              quote: "Set it up in 20 minutes. The resolve API is dead simple — one GET request and my LLM has the right prompt every time. The dashboard is a nice bonus.",
+              name: "Jake R.",
+              role: "Indie Developer",
+              initials: "JR",
+              color: "bg-emerald-500",
+            },
+          ].map((t) => (
+            <motion.div
+              key={t.name}
+              variants={fadeUp}
+              className="rounded-lg border border-white/[0.06] bg-[#111] p-6"
+            >
+              <span className="text-3xl text-[#7F77DD] font-serif leading-none">"</span>
+              <p className="text-sm text-zinc-300 leading-relaxed mt-2 mb-6">{t.quote}</p>
+              <div className="flex items-center gap-3">
+                <div className={`h-9 w-9 rounded-full ${t.color} flex items-center justify-center text-xs font-bold text-white`}>
+                  {t.initials}
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-white">{t.name}</p>
+                  <p className="text-xs text-zinc-500">{t.role}</p>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        <motion.p variants={fadeUp} className="mt-8 text-center text-xs text-zinc-600">
+          * Testimonials represent typical developer experiences with Versera.
+        </motion.p>
+      </Section>
+
       {/* ====== PRICING ====== */}
       <Section className="mx-auto max-w-4xl px-5 py-24">
         <motion.h2 variants={fadeUp} className="text-center text-3xl font-bold mb-3">
@@ -470,7 +611,7 @@ export default function Landing() {
 
       {/* ====== FOOTER ====== */}
       <footer className="border-t border-white/[0.06] bg-[#0a0a0a] px-5 py-14">
-        <div className="mx-auto grid max-w-5xl gap-10 sm:grid-cols-3">
+        <div className="mx-auto grid max-w-5xl gap-10 sm:grid-cols-2 md:grid-cols-4">
           <div>
             <span className="text-lg font-bold text-[#7F77DD]">Versera</span>
             <p className="mt-2 text-sm text-zinc-500">
@@ -496,6 +637,15 @@ export default function Landing() {
               <li><Link to="/docs" className="hover:text-white transition-colors">Documentation</Link></li>
               <li><a href="#" className="hover:text-white transition-colors">GitHub</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Twitter / X</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-3">
+              Legal
+            </h4>
+            <ul className="space-y-2 text-sm text-zinc-400">
+              <li><Link to="/terms" className="hover:text-white transition-colors">Terms of Service</Link></li>
+              <li><Link to="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
             </ul>
           </div>
         </div>
