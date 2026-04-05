@@ -59,7 +59,6 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
-        amber: "hsl(var(--amber))",
         "env-prod": "hsl(var(--env-prod))",
         "env-staging": "hsl(var(--env-staging))",
         "env-dev": "hsl(var(--env-dev))",
@@ -69,9 +68,9 @@ export default {
         },
       },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        lg: "0.5rem",
+        md: "var(--radius)",
+        sm: "calc(var(--radius) - 2px)",
       },
       keyframes: {
         "accordion-down": {
