@@ -60,11 +60,14 @@ export default function PromptEditor() {
         {envTabs.map((env) => (
           <button
             key={env}
-            onClick={() => setActiveEnv(env)}
+            onClick={() => {
+              setActiveEnv(env);
+              setTemplate(envTemplates[env] ?? prompt.template);
+            }}
             className={`rounded-md px-4 py-1.5 text-sm font-medium capitalize transition-colors ${
               activeEnv === env
-                ? "bg-primary text-primary-foreground"
-                : "text-muted-foreground hover:text-foreground"
+                ? "bg-primary text-primary-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground hover:bg-background/50"
             }`}
           >
             {env}
