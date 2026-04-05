@@ -1,5 +1,11 @@
-import Stripe from "stripe";
+import StripeSDK from "stripe";
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2024-06-20",
-});
+type StripeConstructor = new (
+  key: string,
+  config?: Record<string, unknown>
+) => StripeSDK.Stripe;
+
+export const stripe = new (StripeSDK as unknown as StripeConstructor)(
+  process.env.STRIPE_SECRET_KEY!,
+  { apiVersion: "2026-03-25.dahlia" }
+);

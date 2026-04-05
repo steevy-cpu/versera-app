@@ -1,5 +1,4 @@
 import { Router, Request, Response } from "express";
-import Stripe from "stripe";
 import { requireAuth } from "../middleware/requireAuth";
 import { stripe } from "../lib/stripe";
 import prisma from "../lib/prisma";
@@ -110,11 +109,11 @@ export async function stripeWebhook(req: Request, res: Response): Promise<void> 
   }
 
   // Verify signature — return 400 only here (before the 200 ACK)
-  let event: Stripe.Event;
+  let event: ReturnType<typeof stripe.webhooks.constructEvent>;
   try {
     event = stripe.webhooks.constructEvent(
       req.body as Buffer,
-      sig,
+      sig as string,
       process.env.STRIPE_WEBHOOK_SECRET!
     );
   } catch (err) {
@@ -129,7 +128,8 @@ export async function stripeWebhook(req: Request, res: Response): Promise<void> 
   // Process the event after responding so Stripe never times out waiting
   if (event.type !== "checkout.session.completed") return;
 
-  const session = event.data.object as Stripe.Checkout.Session;
+  type CheckoutSession = Awaited<ReturnType<typeof stripe.checkout.sessions.create>>;
+  const session = event.data.object as CheckoutSession;
   const { userId, plan, credits: creditsStr } = session.metadata ?? {};
 
   if (!userId || !creditsStr) {
