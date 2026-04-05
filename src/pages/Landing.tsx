@@ -17,6 +17,7 @@ import {
 import { useTestimonials } from "@/hooks/useTestimonials";
 import { api } from "@/lib/api";
 import { useTheme } from "@/components/ThemeToggle";
+import { VLogoFull } from "@/components/VLogo";
 
 /* ------------------------------------------------------------------ */
 /*  Animation helpers                                                  */
@@ -159,8 +160,8 @@ export default function Landing() {
       {/* ====== NAV ====== */}
       <nav className="fixed top-0 inset-x-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
         <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-5">
-          <Link to="/" className="text-lg font-bold tracking-tight text-primary">
-            Versera
+          <Link to="/" className="hover:opacity-80 transition-opacity">
+            <VLogoFull size={28} />
           </Link>
           <div className="hidden sm:flex items-center gap-5 text-sm">
             <Link to="/docs" className="text-muted-foreground hover:text-foreground transition-colors">
@@ -436,7 +437,7 @@ export default function Landing() {
 
             <div className="flex min-h-[420px]">
               <div className="hidden md:flex w-52 flex-col border-r border-border bg-background p-4">
-                <span className="text-base font-bold text-primary mb-6">Versera</span>
+                <VLogoFull size={20} className="mb-6" />
                 {["Dashboard", "Prompts", "API Keys", "Billing"].map((item, idx) => (
                   <span
                     key={item}
@@ -574,7 +575,7 @@ export default function Landing() {
       <footer className="border-t border-border bg-background px-5 py-14">
         <div className="mx-auto grid max-w-5xl gap-10 sm:grid-cols-2 md:grid-cols-4">
           <div>
-            <span className="text-lg font-bold text-primary">Versera</span>
+            <VLogoFull size={20} />
             <p className="mt-2 text-sm text-tertiary-foreground">
               Prompt version control for LLM apps
             </p>
