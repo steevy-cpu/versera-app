@@ -1,0 +1,94 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Enums ────────────────────────────────────────────────────────────────────
+
+enum PromptStatus {
+  ACTIVE
+  DRAFT
+  DELETED
+}
+
+enum Environment {
+  prod
+  staging
+  dev
+}
+
+// ─── Models ───────────────────────────────────────────────────────────────────
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  avatar       String   @default("")
+  credits      Int      @default(0)
+  totalCredits Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  apiKeys      ApiKey[]
+  prompts      Prompt[]
+  transactions Transaction[]
+}
+
+model ApiKey {
+  id         String    @id @default(cuid())
+  userId     String
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name       String
+  keyHash    String    @unique // SHA-256 hash of the full key; raw key is never stored
+  keyPrefix  String            // masked display string e.g. "vrs_live_••••3f9a"
+  lastUsedAt DateTime?
+  createdAt  DateTime  @default(now())
+  revokedAt  DateTime?         // null = active; set to revoke
+}
+
+model Prompt {
+  id          String        @id @default(cuid())
+  slug        String                          // URL-safe name, e.g. "summarize-doc"
+  name        String
+  userId      String
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  environment Environment                    // prod | staging | dev — fixed per prompt
+  status      PromptStatus  @default(DRAFT)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  versions    PromptVersion[]
+
+  @@unique([userId, slug])
+}
+
+model PromptVersion {
+  id        String   @id @default(cuid())
+  promptId  String
+  prompt    Prompt   @relation(fields: [promptId], references: [id], onDelete: Cascade)
+  version   Int                       // sequential integer per prompt, starting at 1
+  template  String   @db.Text        // raw prompt text with {{variable}} placeholders
+  message   String   @default("")    // commit-message-style description of the change
+  isCurrent Boolean  @default(false) // true for the active version of this prompt
+  diff      String[]                 // diff lines prefixed with +, -, or space
+  savedAt   DateTime @default(now())
+
+  @@unique([promptId, version])
+  @@index([promptId, isCurrent])
+}
+
+model Transaction {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  description String
+  credits     Int                    // positive = credit purchase, negative = usage deduction
+  amountCents Int      @default(0)  // price paid in cents (0 for usage deductions)
+  stripeId    String?               // Stripe PaymentIntent or Checkout Session ID
+  createdAt   DateTime @default(now())
+}
