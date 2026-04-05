@@ -451,7 +451,7 @@ export default function Landing() {
       <Section className="mx-auto max-w-6xl px-5 py-24">
         <motion.div
           variants={fadeUp}
-          className="rounded-2xl bg-[#7F77DD] px-8 py-16 text-center"
+          className="rounded-2xl bg-[radial-gradient(circle_at_center,#8b85e3,#6b64c4)] px-8 py-16 text-center"
         >
           <h2 className="text-3xl font-bold text-white mb-3">
             Ready to version your prompts?
