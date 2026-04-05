@@ -47,7 +47,7 @@ export default function Prompts() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <h1 className="text-2xl font-semibold tracking-tight">Prompts</h1>
         <Button onClick={() => console.log("New Prompt")} size="sm">
           <Plus className="mr-1.5 h-4 w-4" />
@@ -55,8 +55,8 @@ export default function Prompts() {
         </Button>
       </div>
 
-      <div className="flex gap-3">
-        <div className="relative flex-1 max-w-xs">
+      <div className="flex flex-col sm:flex-row gap-3">
+        <div className="relative flex-1 sm:max-w-xs">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             placeholder="Search prompts…"
@@ -78,15 +78,15 @@ export default function Prompts() {
         </Select>
       </div>
 
-      <Card className="shadow-none overflow-hidden">
+      <Card className="shadow-none overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent">
               <TableHead>Name</TableHead>
-              <TableHead>Latest Version</TableHead>
+              <TableHead className="hidden sm:table-cell">Latest Version</TableHead>
               <TableHead>Environment</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Last Updated</TableHead>
+              <TableHead className="hidden sm:table-cell">Status</TableHead>
+              <TableHead className="hidden md:table-cell">Last Updated</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -114,18 +114,18 @@ export default function Prompts() {
                   onClick={() => navigate(`/prompts/${p.slug}`)}
                 >
                   <TableCell className="font-mono text-sm font-medium">{p.name}</TableCell>
-                  <TableCell className="font-mono text-sm">v{p.latestVersion ?? "—"}</TableCell>
+                  <TableCell className="font-mono text-sm hidden sm:table-cell">v{p.latestVersion ?? "—"}</TableCell>
                   <TableCell>
                     <Badge variant="secondary" className={envColor(p.environment)}>
                       {p.environment}
                     </Badge>
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="hidden sm:table-cell">
                     <Badge variant="secondary" className={statusColor(p.status)}>
                       {p.status === "ACTIVE" ? "Active" : "Draft"}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-muted-foreground text-sm">
+                  <TableCell className="text-muted-foreground text-sm hidden md:table-cell">
                     {p.lastUpdated
                       ? formatDistanceToNow(new Date(p.lastUpdated), { addSuffix: true })
                       : formatDistanceToNow(new Date(p.updatedAt), { addSuffix: true })}
