@@ -1,18 +1,16 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Copy, ChevronRight } from "lucide-react";
-import { prompts } from "@/mock/prompts";
+import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Copy } from "lucide-react";
+import { ChevronRight } from "lucide-react";
+import { usePrompt, useSaveVersion } from "@/hooks/usePrompts";
+import { useToast } from "@/hooks/use-toast";
 
 const envTabs = ["dev", "staging", "prod"] as const;
-
-const envTemplates: Record<string, string> = {
-  dev: `[DRAFT] Summarize the following document in {{tone}} style.\n\nTesting new approach for: {{focus_areas}}\n\n{{document}}`,
-  staging: `Summarize the following document in {{tone}} style.\n\nFocus on: {{focus_areas}}\n\nKeep it under {{max_words}} words.\n\nDocument: {{document}}`,
-  prod: `Summarize the following document in {{tone}} style.\n\nFocus on: {{focus_areas}}\n\nMaximum length: {{max_words}} words\n\nDocument:\n{{document}}`,
-};
 
 function HighlightedTemplate({ text }: { text: string }) {
   const parts = text.split(/({{[^}]+}})/g);
@@ -30,21 +28,66 @@ function HighlightedTemplate({ text }: { text: string }) {
 }
 
 export default function PromptEditor() {
-  const { id } = useParams();
+  const { id: slug } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const prompt = prompts.find((p) => p.id === id) ?? prompts[0];
-  const [activeEnv, setActiveEnv] = useState(prompt.environment);
-  const [template, setTemplate] = useState(envTemplates[prompt.environment] ?? prompt.template);
+  const { toast } = useToast();
+
+  const { data: prompt, isLoading } = usePrompt(slug);
+  const { mutate: saveVersion, isPending: isSaving } = useSaveVersion();
+
+  const currentVersion = prompt?.versions?.find((v) => v.isCurrent);
+
+  const [template, setTemplate] = useState("");
+  const [message, setMessage] = useState("");
+
+  // Populate template when prompt loads
+  useEffect(() => {
+    if (currentVersion) setTemplate(currentVersion.template);
+  }, [currentVersion?.id]);
 
   const variables = useMemo(() => {
     const matches = template.match(/{{(\w+)}}/g);
     return matches ? [...new Set(matches)] : [];
   }, [template]);
 
-  const copySnippet = () => {
-    navigator.clipboard.writeText(`GET /v1/resolve/${prompt.name}`);
-    console.log("Copied API snippet");
+  const handleSave = () => {
+    if (!slug) return;
+    saveVersion(
+      { slug, template, message: message.trim() || "Updated template" },
+      {
+        onSuccess: () => {
+          toast({ title: "Version saved" });
+          setMessage("");
+        },
+        onError: (err) => {
+          toast({ title: "Save failed", description: (err as { message: string }).message, variant: "destructive" });
+        },
+      }
+    );
   };
+
+  const copySnippet = () => {
+    navigator.clipboard.writeText(`GET /v1/resolve/${slug}`);
+    toast({ title: "Copied to clipboard" });
+  };
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <Skeleton className="h-5 w-64" />
+        <Skeleton className="h-8 w-48" />
+        <div className="grid gap-6 lg:grid-cols-5">
+          <div className="lg:col-span-3"><Skeleton className="h-64 w-full" /></div>
+          <div className="lg:col-span-2 space-y-4">
+            <Skeleton className="h-32 w-full" />
+            <Skeleton className="h-24 w-full" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!prompt) return <p className="text-muted-foreground">Prompt not found.</p>;
 
   return (
     <div className="space-y-6">
@@ -55,19 +98,16 @@ export default function PromptEditor() {
         <span className="text-foreground font-medium">{prompt.name}</span>
       </div>
 
-      {/* Env tabs */}
+      {/* Env tabs — active tab reflects the prompt's real environment */}
       <div className="flex gap-1 rounded-lg bg-muted p-1 w-fit">
         {envTabs.map((env) => (
           <button
             key={env}
-            onClick={() => {
-              setActiveEnv(env);
-              setTemplate(envTemplates[env] ?? prompt.template);
-            }}
+            disabled={env !== prompt.environment}
             className={`rounded-md px-4 py-1.5 text-sm font-medium capitalize transition-colors ${
-              activeEnv === env
+              env === prompt.environment
                 ? "bg-primary text-primary-foreground shadow-sm"
-                : "text-muted-foreground hover:text-foreground hover:bg-background/50"
+                : "text-muted-foreground opacity-40 cursor-not-allowed"
             }`}
           >
             {env}
@@ -86,7 +126,6 @@ export default function PromptEditor() {
               className="w-full min-h-[300px] rounded-lg bg-editor p-5 font-mono text-sm resize-y focus:outline-none focus:ring-2 focus:ring-ring text-transparent caret-editor-foreground selection:bg-white/20"
               spellCheck={false}
             />
-            {/* Overlay for highlighting — displayed on top, pointer-events none */}
             <div
               className="absolute inset-0 pointer-events-none rounded-lg p-5 overflow-auto"
               aria-hidden
@@ -94,9 +133,18 @@ export default function PromptEditor() {
               <HighlightedTemplate text={template} />
             </div>
           </div>
-          <Button onClick={() => console.log("Save as new version")}>
-            Save as new version
-          </Button>
+
+          <div className="flex gap-2 items-center">
+            <Input
+              placeholder="Commit message (optional)"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              className="max-w-xs text-sm"
+            />
+            <Button onClick={handleSave} disabled={isSaving}>
+              {isSaving ? "Saving…" : "Save as new version"}
+            </Button>
+          </div>
         </div>
 
         {/* Metadata — 2/5 */}
@@ -106,12 +154,14 @@ export default function PromptEditor() {
               <CardTitle className="text-sm font-medium">Current Version</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-3xl font-bold">v{prompt.latestVersion}</p>
+              <p className="text-3xl font-bold">v{currentVersion?.version ?? "—"}</p>
               <p className="mt-1 text-sm text-muted-foreground">
-                Saved {prompt.lastUpdated}
+                {currentVersion?.savedAt
+                  ? new Date(currentVersion.savedAt).toLocaleString()
+                  : "—"}
               </p>
               <button
-                onClick={() => navigate(`/prompts/${prompt.id}/versions`)}
+                onClick={() => navigate(`/prompts/${slug}/versions`)}
                 className="mt-2 text-sm font-medium text-primary hover:underline"
               >
                 View history
@@ -124,15 +174,19 @@ export default function PromptEditor() {
               <CardTitle className="text-sm font-medium">Detected Variables</CardTitle>
             </CardHeader>
             <CardContent className="flex flex-wrap gap-2">
-              {variables.map((v) => (
-                <Badge
-                  key={v}
-                  variant="secondary"
-                  className="bg-amber/15 text-amber border-0 font-mono text-xs"
-                >
-                  {v}
-                </Badge>
-              ))}
+              {variables.length === 0 ? (
+                <p className="text-xs text-muted-foreground">No variables detected</p>
+              ) : (
+                variables.map((v) => (
+                  <Badge
+                    key={v}
+                    variant="secondary"
+                    className="bg-amber/15 text-amber border-0 font-mono text-xs"
+                  >
+                    {v}
+                  </Badge>
+                ))
+              )}
             </CardContent>
           </Card>
 
@@ -143,7 +197,7 @@ export default function PromptEditor() {
             <CardContent>
               <div className="flex items-center justify-between rounded-md bg-muted px-3 py-2">
                 <code className="font-mono text-xs">
-                  GET /v1/resolve/{prompt.name}
+                  GET /v1/resolve/{prompt.slug}
                 </code>
                 <button onClick={copySnippet} className="ml-2 text-muted-foreground hover:text-foreground">
                   <Copy className="h-3.5 w-3.5" />

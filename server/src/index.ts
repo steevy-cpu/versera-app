@@ -15,7 +15,27 @@ const PORT = process.env.PORT ?? 3001;
 
 // ─── Global middleware ────────────────────────────────────────────────────────
 
-app.use(cors({ origin: process.env.FRONTEND_URL ?? "http://localhost:5173" }));
+// FRONTEND_URL may be a comma-separated list to allow multiple origins
+// e.g. FRONTEND_URL=https://foo.lovable.app,https://bar.lovable.app
+const allowedOrigins: string[] = [
+  "http://localhost:5173",
+  "http://localhost:5174",
+  ...(process.env.FRONTEND_URL
+    ? process.env.FRONTEND_URL.split(",").map((u) => u.trim())
+    : []),
+];
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // Allow requests with no origin (curl, mobile apps, server-to-server)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) return callback(null, true);
+      callback(new Error(`CORS: origin ${origin} not allowed`));
+    },
+    credentials: true,
+  })
+);
 
 // Stripe webhook needs the raw body — mount it explicitly before express.json()
 // so its express.raw() middleware takes effect only on that path.

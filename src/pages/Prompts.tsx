@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { formatDistanceToNow } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Select,
   SelectContent,
@@ -20,7 +22,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Plus, Search } from "lucide-react";
-import { prompts } from "@/mock/prompts";
+import { usePrompts } from "@/hooks/usePrompts";
 
 function envColor(env: string) {
   switch (env) {
@@ -31,7 +33,7 @@ function envColor(env: string) {
 }
 
 function statusColor(status: string) {
-  return status === "Active"
+  return status === "ACTIVE" || status === "Active"
     ? "bg-env-prod/15 text-env-prod border-0"
     : "bg-muted text-muted-foreground border-0";
 }
@@ -41,11 +43,7 @@ export default function Prompts() {
   const [search, setSearch] = useState("");
   const [envFilter, setEnvFilter] = useState("all");
 
-  const filtered = prompts.filter((p) => {
-    const matchesSearch = p.name.toLowerCase().includes(search.toLowerCase());
-    const matchesEnv = envFilter === "all" || p.environment === envFilter;
-    return matchesSearch && matchesEnv;
-  });
+  const { data: prompts, isLoading } = usePrompts(search, envFilter);
 
   return (
     <div className="space-y-6">
@@ -92,27 +90,49 @@ export default function Prompts() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filtered.map((p) => (
-              <TableRow
-                key={p.id}
-                className="cursor-pointer"
-                onClick={() => navigate(`/prompts/${p.id}`)}
-              >
-                <TableCell className="font-mono text-sm font-medium">{p.name}</TableCell>
-                <TableCell className="font-mono text-sm">v{p.latestVersion}</TableCell>
-                <TableCell>
-                  <Badge variant="secondary" className={envColor(p.environment)}>
-                    {p.environment}
-                  </Badge>
+            {isLoading ? (
+              Array.from({ length: 4 }).map((_, i) => (
+                <TableRow key={i}>
+                  {Array.from({ length: 5 }).map((_, j) => (
+                    <TableCell key={j}>
+                      <Skeleton className="h-4 w-full" />
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (prompts ?? []).length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
+                  No prompts found.
                 </TableCell>
-                <TableCell>
-                  <Badge variant="secondary" className={statusColor(p.status)}>
-                    {p.status}
-                  </Badge>
-                </TableCell>
-                <TableCell className="text-muted-foreground text-sm">{p.lastUpdated}</TableCell>
               </TableRow>
-            ))}
+            ) : (
+              (prompts ?? []).map((p) => (
+                <TableRow
+                  key={p.id}
+                  className="cursor-pointer"
+                  onClick={() => navigate(`/prompts/${p.slug}`)}
+                >
+                  <TableCell className="font-mono text-sm font-medium">{p.name}</TableCell>
+                  <TableCell className="font-mono text-sm">v{p.latestVersion ?? "—"}</TableCell>
+                  <TableCell>
+                    <Badge variant="secondary" className={envColor(p.environment)}>
+                      {p.environment}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant="secondary" className={statusColor(p.status)}>
+                      {p.status === "ACTIVE" ? "Active" : "Draft"}
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="text-muted-foreground text-sm">
+                    {p.lastUpdated
+                      ? formatDistanceToNow(new Date(p.lastUpdated), { addSuffix: true })
+                      : formatDistanceToNow(new Date(p.updatedAt), { addSuffix: true })}
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
       </Card>

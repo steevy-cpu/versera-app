@@ -1,7 +1,8 @@
-import { LayoutDashboard, FileText, Key, CreditCard, Settings } from "lucide-react";
+import { LayoutDashboard, FileText, Key, CreditCard, Settings, LogOut } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
-import { user } from "@/mock/user";
+import { useMe } from "@/hooks/useAuth";
+import { getUser, logout } from "@/lib/auth";
 import {
   Sidebar,
   SidebarContent,
@@ -24,6 +25,11 @@ export function AppSidebar() {
   const location = useLocation();
   const isActive = (path: string) =>
     location.pathname === path || location.pathname.startsWith(path + "/");
+
+  // Use cached user for instant render, React Query keeps it fresh
+  const cached = getUser();
+  const { data: user } = useMe();
+  const display = user ?? cached;
 
   return (
     <Sidebar className="border-r-0">
@@ -59,20 +65,20 @@ export function AppSidebar() {
       <SidebarFooter className="border-t border-sidebar-border px-4 py-4">
         <div className="flex items-center gap-3">
           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-sidebar-accent text-xs font-semibold text-sidebar-accent-foreground">
-            {user.avatar}
+            {display?.avatar ?? "?"}
           </div>
           <div className="flex-1 overflow-hidden">
             <p className="truncate text-sm font-medium text-sidebar-accent-foreground">
-              {user.email}
+              {display?.email ?? "…"}
             </p>
           </div>
         </div>
         <button
-          onClick={() => console.log("Settings clicked")}
+          onClick={logout}
           className="mt-2 flex items-center gap-2 text-xs text-sidebar-foreground hover:text-sidebar-accent-foreground"
         >
-          <Settings className="h-3.5 w-3.5" />
-          Settings
+          <LogOut className="h-3.5 w-3.5" />
+          Sign out
         </button>
       </SidebarFooter>
     </Sidebar>

@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate, Outlet } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -12,8 +12,14 @@ import Versions from "@/pages/Versions";
 import ApiKeys from "@/pages/ApiKeys";
 import Billing from "@/pages/Billing";
 import NotFound from "@/pages/NotFound";
+import { isAuthenticated } from "@/lib/auth";
 
 const queryClient = new QueryClient();
+
+/** Redirects unauthenticated users to /login */
+function ProtectedRoute() {
+  return isAuthenticated() ? <Outlet /> : <Navigate to="/login" replace />;
+}
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -23,15 +29,25 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Navigate to="/login" replace />} />
-          <Route path="/login" element={<Login />} />
-          <Route element={<DashboardLayout />}>
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/prompts" element={<Prompts />} />
-            <Route path="/prompts/:id" element={<PromptEditor />} />
-            <Route path="/prompts/:id/versions" element={<Versions />} />
-            <Route path="/api-keys" element={<ApiKeys />} />
-            <Route path="/billing" element={<Billing />} />
+
+          {/* Redirect logged-in users away from /login */}
+          <Route
+            path="/login"
+            element={isAuthenticated() ? <Navigate to="/dashboard" replace /> : <Login />}
+          />
+
+          {/* All dashboard routes require authentication */}
+          <Route element={<ProtectedRoute />}>
+            <Route element={<DashboardLayout />}>
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/prompts" element={<Prompts />} />
+              <Route path="/prompts/:id" element={<PromptEditor />} />
+              <Route path="/prompts/:id/versions" element={<Versions />} />
+              <Route path="/api-keys" element={<ApiKeys />} />
+              <Route path="/billing" element={<Billing />} />
+            </Route>
           </Route>
+
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
