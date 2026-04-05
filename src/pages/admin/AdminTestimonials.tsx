@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Star } from "lucide-react";
+
 
 const statusBadge = (status: Testimonial["status"]) => {
   if (status === "approved")
