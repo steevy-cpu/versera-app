@@ -88,6 +88,13 @@ export default function Signup() {
             <Button type="submit" className="w-full" disabled={isPending}>
               {isPending ? "Creating account…" : "Create account"}
             </Button>
+
+            <p className="text-xs text-center text-muted-foreground">
+              By creating an account you agree to our{" "}
+              <Link to="/terms" className="text-primary hover:underline">Terms of Service</Link>{" "}
+              and{" "}
+              <Link to="/privacy" className="text-primary hover:underline">Privacy Policy</Link>
+            </p>
           </form>
 
           <p className="mt-6 text-center text-sm text-muted-foreground">
