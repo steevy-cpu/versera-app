@@ -5,17 +5,17 @@ const sections = [
   {
     title: "Information we collect",
     body: (
-      <ul className="list-disc list-inside space-y-1.5 text-sm text-zinc-400 leading-[1.8]">
-        <li><strong className="text-zinc-300">Account info:</strong> name, email, password hash</li>
-        <li><strong className="text-zinc-300">Usage data:</strong> API calls, credit usage, prompt content you create</li>
-        <li><strong className="text-zinc-300">Payment info:</strong> processed by Stripe — we never see your card details</li>
+      <ul className="list-disc list-inside space-y-1.5 text-sm text-muted-foreground leading-[1.8]">
+        <li><strong className="text-foreground">Account info:</strong> name, email, password hash</li>
+        <li><strong className="text-foreground">Usage data:</strong> API calls, credit usage, prompt content you create</li>
+        <li><strong className="text-foreground">Payment info:</strong> processed by Stripe — we never see your card details</li>
       </ul>
     ),
   },
   {
     title: "How we use your information",
     body: (
-      <ul className="list-disc list-inside space-y-1.5 text-sm text-zinc-400 leading-[1.8]">
+      <ul className="list-disc list-inside space-y-1.5 text-sm text-muted-foreground leading-[1.8]">
         <li>To provide and improve the service</li>
         <li>To send transactional emails (account created, low credits warning)</li>
         <li>We never sell your data to third parties</li>
@@ -25,7 +25,7 @@ const sections = [
   {
     title: "Data storage",
     body: (
-      <ul className="list-disc list-inside space-y-1.5 text-sm text-zinc-400 leading-[1.8]">
+      <ul className="list-disc list-inside space-y-1.5 text-sm text-muted-foreground leading-[1.8]">
         <li>Stored on Supabase (PostgreSQL) in US-East region</li>
         <li>Prompt templates are stored to provide version history — they are private to your account</li>
       </ul>
@@ -34,7 +34,7 @@ const sections = [
   {
     title: "Third-party services",
     body: (
-      <ul className="list-disc list-inside space-y-1.5 text-sm text-zinc-400 leading-[1.8]">
+      <ul className="list-disc list-inside space-y-1.5 text-sm text-muted-foreground leading-[1.8]">
         <li>Stripe for payments</li>
         <li>Railway for API hosting</li>
         <li>Supabase for database</li>
@@ -45,7 +45,7 @@ const sections = [
   {
     title: "Your rights",
     body: (
-      <ul className="list-disc list-inside space-y-1.5 text-sm text-zinc-400 leading-[1.8]">
+      <ul className="list-disc list-inside space-y-1.5 text-sm text-muted-foreground leading-[1.8]">
         <li>Access your data via the dashboard at any time</li>
         <li>Delete your account and all data from Settings</li>
         <li>Email privacy@versera.dev for data requests</li>
@@ -85,7 +85,7 @@ export default function Privacy() {
                 {s.title}
               </h2>
               {typeof s.body === "string" ? (
-                <p className="text-sm text-zinc-400 leading-[1.8]">{s.body}</p>
+                <p className="text-sm text-muted-foreground leading-[1.8]">{s.body}</p>
               ) : (
                 s.body
               )}
