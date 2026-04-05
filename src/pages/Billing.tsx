@@ -67,6 +67,24 @@ export default function Billing() {
     <div className="space-y-8">
       <h1 className="text-2xl font-semibold tracking-tight">Billing & Credits</h1>
 
+      {isSuccess && (
+        <Alert className="border-green-500/50 bg-green-500/10">
+          <CheckCircle2 className="h-4 w-4 text-green-600" />
+          <AlertDescription className="text-green-700">
+            Payment successful! Your credits have been added to your account.
+          </AlertDescription>
+        </Alert>
+      )}
+
+      {isCancelled && (
+        <Alert className="border-muted bg-muted/50">
+          <Info className="h-4 w-4 text-muted-foreground" />
+          <AlertDescription className="text-muted-foreground">
+            Payment cancelled. No charges were made.
+          </AlertDescription>
+        </Alert>
+      )}
+
       {/* Credit balance */}
       <Card className="shadow-none">
         <CardContent className="p-6 space-y-3">
