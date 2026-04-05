@@ -1,5 +1,5 @@
 import { Outlet, NavLink, Link, Navigate } from "react-router-dom";
-import { BarChart3, Users, DollarSign, ArrowLeft, LogOut } from "lucide-react";
+import { BarChart3, Users, DollarSign, ArrowLeft, LogOut, MessageSquare } from "lucide-react";
 import { useMe } from "@/hooks/useAuth";
 import { getUser, logout } from "@/lib/auth";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -8,6 +8,7 @@ const adminNav = [
   { title: "Overview", url: "/admin", icon: BarChart3, end: true },
   { title: "Users", url: "/admin/users", icon: Users, end: false },
   { title: "Revenue", url: "/admin/revenue", icon: DollarSign, end: true },
+  { title: "Testimonials", url: "/admin/testimonials", icon: MessageSquare, end: true },
 ];
 
 export default function AdminLayout() {

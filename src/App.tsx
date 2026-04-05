@@ -24,6 +24,7 @@ import AdminOverview from "@/pages/admin/AdminOverview";
 import AdminUsers from "@/pages/admin/AdminUsers";
 import AdminUserDetail from "@/pages/admin/AdminUserDetail";
 import AdminRevenue from "@/pages/admin/AdminRevenue";
+import AdminTestimonials from "@/pages/admin/AdminTestimonials";
 import { isAuthenticated } from "@/lib/auth";
 
 const queryClient = new QueryClient();
@@ -74,6 +75,7 @@ const App = () => (
               <Route path="users" element={<AdminUsers />} />
               <Route path="users/:id" element={<AdminUserDetail />} />
               <Route path="revenue" element={<AdminRevenue />} />
+              <Route path="testimonials" element={<AdminTestimonials />} />
             </Route>
           </Route>
 

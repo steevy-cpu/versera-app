@@ -607,3 +607,149 @@ export default function Landing() {
     </div>
   );
 }
+
+/* ------------------------------------------------------------------ */
+/*  Testimonials Section                                               */
+/* ------------------------------------------------------------------ */
+function TestimonialsSection() {
+  const { data: testimonials } = useTestimonials();
+  const hasApproved = !!testimonials?.length;
+
+  const [name, setName] = useState("");
+  const [role, setRole] = useState("");
+  const [content, setContent] = useState("");
+  const [rating, setRating] = useState(5);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [formError, setFormError] = useState("");
+
+  const handleSubmit = async () => {
+    setFormError("");
+    if (!name.trim() || !role.trim() || !content.trim()) {
+      setFormError("Please fill in all fields");
+      return;
+    }
+    setSubmitting(true);
+    try {
+      await api.post("/v1/testimonials", { name: name.trim(), role: role.trim(), content: content.trim(), rating });
+      setSubmitted(true);
+    } catch (err) {
+      console.log("POST /v1/testimonials failed — endpoint may not exist yet", err);
+      setFormError("Submission failed. Please try again later.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <Section className="mx-auto max-w-5xl px-5 py-24">
+      <motion.h2 variants={fadeUp} className="text-center text-3xl font-bold mb-4">
+        Share your experience
+      </motion.h2>
+      <motion.p variants={fadeUp} className="text-center text-zinc-400 max-w-[500px] mx-auto mb-12">
+        Used Versera? We'd love to hear from you. Real testimonials from real developers.
+      </motion.p>
+
+      {/* Approved testimonials */}
+      {hasApproved && (
+        <div className="grid gap-5 md:grid-cols-3 mb-12">
+          {testimonials!.map((t) => (
+            <motion.div
+              key={t.id}
+              variants={fadeUp}
+              className="rounded-lg border border-white/[0.06] bg-[#111] p-6"
+            >
+              <div className="flex gap-0.5 mb-3">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star
+                    key={i}
+                    className={`h-4 w-4 ${i < t.rating ? "fill-amber-400 text-amber-400" : "text-zinc-600"}`}
+                  />
+                ))}
+              </div>
+              <p className="text-sm text-zinc-300 leading-relaxed mb-4">"{t.content}"</p>
+              <div className="flex items-center gap-3">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#7F77DD]/20 text-xs font-bold text-[#7F77DD]">
+                  {t.name.split(" ").map((w) => w[0]).join("").slice(0, 2).toUpperCase()}
+                </div>
+                <div>
+                  <p className="text-sm font-medium">{t.name}</p>
+                  <p className="text-xs text-zinc-500">{t.role}</p>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      )}
+
+      {/* Placeholder cards when no approved testimonials */}
+      {!hasApproved && (
+        <div className="grid gap-5 md:grid-cols-3 mb-12">
+          {[0, 1, 2].map((i) => (
+            <motion.div
+              key={i}
+              variants={fadeUp}
+              className="rounded-lg border-2 border-dashed border-white/[0.08] bg-[#111] p-10 flex items-center justify-center min-h-[160px]"
+            >
+              <p className="text-sm text-zinc-600">Your review here</p>
+            </motion.div>
+          ))}
+        </div>
+      )}
+
+      {/* Submission form */}
+      <motion.div variants={fadeUp} className="mx-auto max-w-[640px]">
+        {submitted ? (
+          <div className="rounded-xl bg-[#111] border border-white/[0.06] p-8 text-center">
+            <p className="text-emerald-400 font-medium mb-2">Thank you!</p>
+            <p className="text-sm text-zinc-400">
+              Your testimonial has been submitted for review. We'll feature it on the site once approved.
+            </p>
+          </div>
+        ) : (
+          <div className="rounded-xl bg-[#111] border border-white/[0.06] p-8 space-y-4">
+            <input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Your name"
+              className="w-full rounded-md border border-white/[0.08] bg-[#0a0a0a] px-3 py-2.5 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-[#7F77DD]/50"
+            />
+            <input
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              placeholder="e.g. Senior Engineer at Acme"
+              className="w-full rounded-md border border-white/[0.08] bg-[#0a0a0a] px-3 py-2.5 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-[#7F77DD]/50"
+            />
+            <textarea
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              rows={4}
+              placeholder="What problem did Versera solve for you? What's your favorite feature?"
+              className="w-full rounded-md border border-white/[0.08] bg-[#0a0a0a] px-3 py-2.5 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-[#7F77DD]/50 resize-none"
+            />
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-zinc-400">Rating:</span>
+              <div className="flex gap-1">
+                {[1, 2, 3, 4, 5].map((s) => (
+                  <button key={s} onClick={() => setRating(s)} className="focus:outline-none">
+                    <Star className={`h-5 w-5 transition-colors ${s <= rating ? "fill-amber-400 text-amber-400" : "text-zinc-600 hover:text-zinc-400"}`} />
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {formError && <p className="text-sm text-red-400">{formError}</p>}
+
+            <button
+              onClick={handleSubmit}
+              disabled={submitting}
+              className="w-full rounded-lg bg-[#7F77DD] px-6 py-2.5 text-sm font-semibold text-white hover:bg-[#6e66cc] transition-colors disabled:opacity-50"
+            >
+              {submitting ? "Submitting..." : "Submit testimonial"}
+            </button>
+          </div>
+        )}
+      </motion.div>
+    </Section>
+  );
+}
