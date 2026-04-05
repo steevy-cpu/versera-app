@@ -81,12 +81,12 @@ export default function Login() {
 
           <p className="mt-6 text-center text-sm text-muted-foreground">
             Don't have an account?{" "}
-            <button
-              onClick={() => console.log("Sign up clicked")}
+            <a
+              href="/signup"
               className="font-medium text-primary hover:underline"
             >
               Sign up
-            </button>
+            </a>
           </p>
         </CardContent>
       </Card>
