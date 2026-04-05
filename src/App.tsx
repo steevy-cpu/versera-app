@@ -4,7 +4,9 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import DashboardLayout from "@/components/DashboardLayout";
+import Landing from "@/pages/Landing";
 import Login from "@/pages/Login";
+import Signup from "@/pages/Signup";
 import Dashboard from "@/pages/Dashboard";
 import Prompts from "@/pages/Prompts";
 import PromptEditor from "@/pages/PromptEditor";
@@ -28,12 +30,16 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="/" element={<Landing />} />
 
           {/* Redirect logged-in users away from /login */}
           <Route
             path="/login"
             element={isAuthenticated() ? <Navigate to="/dashboard" replace /> : <Login />}
+          />
+          <Route
+            path="/signup"
+            element={isAuthenticated() ? <Navigate to="/dashboard" replace /> : <Signup />}
           />
 
           {/* All dashboard routes require authentication */}

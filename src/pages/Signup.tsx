@@ -1,36 +1,36 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { api } from "@/lib/api";
 import { saveToken, saveUser } from "@/lib/auth";
-import type { User } from "@/lib/types";
-import type { ApiError } from "@/lib/types";
+import type { User, ApiError } from "@/lib/types";
 
-export default function Login() {
+export default function Signup() {
   const navigate = useNavigate();
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isPending, setIsPending] = useState(false);
 
-  const handleSignIn = async (e: React.FormEvent) => {
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setIsPending(true);
 
     try {
       const { token, user } = await api.post<{ token: string; user: User }>(
-        "/auth/login",
-        { email, password }
+        "/auth/register",
+        { name, email, password }
       );
       saveToken(token);
       saveUser(user);
       navigate("/dashboard");
     } catch (err) {
-      setError((err as ApiError).message ?? "Login failed");
+      setError((err as ApiError).message ?? "Signup failed");
     } finally {
       setIsPending(false);
     }
@@ -46,7 +46,18 @@ export default function Login() {
             </span>
           </div>
 
-          <form onSubmit={handleSignIn} className="space-y-4">
+          <form onSubmit={handleSignup} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="name">Name</Label>
+              <Input
+                id="name"
+                type="text"
+                placeholder="Alex"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
+            </div>
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -75,18 +86,18 @@ export default function Login() {
             )}
 
             <Button type="submit" className="w-full" disabled={isPending}>
-              {isPending ? "Signing in…" : "Sign in"}
+              {isPending ? "Creating account…" : "Create account"}
             </Button>
           </form>
 
           <p className="mt-6 text-center text-sm text-muted-foreground">
-            Don't have an account?{" "}
-            <a
-              href="/signup"
+            Already have an account?{" "}
+            <Link
+              to="/login"
               className="font-medium text-primary hover:underline"
             >
-              Sign up
-            </a>
+              Sign in
+            </Link>
           </p>
         </CardContent>
       </Card>
