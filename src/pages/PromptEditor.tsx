@@ -74,12 +74,12 @@ export default function PromptEditor() {
             <textarea
               value={template}
               onChange={(e) => setTemplate(e.target.value)}
-              className="w-full min-h-[300px] rounded-lg bg-editor p-5 font-mono text-sm text-editor-foreground resize-y focus:outline-none focus:ring-2 focus:ring-ring"
+              className="w-full min-h-[300px] rounded-lg bg-editor p-5 font-mono text-sm resize-y focus:outline-none focus:ring-2 focus:ring-ring text-transparent caret-editor-foreground selection:bg-white/20"
               spellCheck={false}
             />
             {/* Overlay for highlighting — displayed on top, pointer-events none */}
             <div
-              className="absolute inset-0 pointer-events-none rounded-lg p-5 overflow-hidden"
+              className="absolute inset-0 pointer-events-none rounded-lg p-5 overflow-auto"
               aria-hidden
             >
               <HighlightedTemplate text={template} />
