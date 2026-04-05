@@ -66,6 +66,8 @@ export default {
           DEFAULT: "hsl(var(--editor-bg))",
           foreground: "hsl(var(--editor-foreground))",
         },
+        "tertiary-foreground": "hsl(var(--tertiary-foreground))",
+        "strong-border": "hsl(var(--strong-border))",
       },
       borderRadius: {
         lg: "0.5rem",

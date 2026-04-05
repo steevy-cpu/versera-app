@@ -120,9 +120,9 @@ const codeLines: { text: string; type: "comment" | "code" | "string" | "keyword"
 ];
 
 function colorLine(line: typeof codeLines[number]) {
-  if (line.type === "comment") return "text-[#6b7280]";
-  if (line.type === "string") return "text-[#6ee7b7]";
-  return "text-[#e5e7eb]";
+  if (line.type === "comment") return "text-tertiary-foreground";
+  if (line.type === "string") return "text-emerald-300 dark:text-emerald-300";
+  return "text-foreground";
 }
 
 /* ------------------------------------------------------------------ */
@@ -136,9 +136,9 @@ const mockPrompts = [
 ];
 
 function envBadgeClass(env: string) {
-  if (env === "prod") return "bg-emerald-500/15 text-emerald-400";
-  if (env === "staging") return "bg-amber-500/15 text-amber-400";
-  return "bg-zinc-500/15 text-zinc-400";
+  if (env === "prod") return "bg-primary/15 text-primary";
+  if (env === "staging") return "bg-amber-500/15 text-amber-500 dark:text-amber-400";
+  return "bg-muted text-muted-foreground";
 }
 
 /* ================================================================== */
@@ -155,44 +155,44 @@ export default function Landing() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white font-sans antialiased">
+    <div className="min-h-screen bg-background text-foreground font-sans antialiased">
       {/* ====== NAV ====== */}
-      <nav className="fixed top-0 inset-x-0 z-50 border-b border-[#1f2937] bg-[#0a0a0a]/80 backdrop-blur-md">
+      <nav className="fixed top-0 inset-x-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
         <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-5">
-          <Link to="/" className="text-lg font-bold tracking-tight text-[#10b981]">
+          <Link to="/" className="text-lg font-bold tracking-tight text-primary">
             Versera
           </Link>
           <div className="hidden sm:flex items-center gap-5 text-sm">
-            <Link to="/docs" className="text-[#9ca3af] hover:text-[#f9fafb] transition-colors">
+            <Link to="/docs" className="text-muted-foreground hover:text-foreground transition-colors">
               Documentation
             </Link>
-            <button onClick={toggle} className="text-[#9ca3af] hover:text-[#f9fafb] transition-colors">
+            <button onClick={toggle} className="text-muted-foreground hover:text-foreground transition-colors">
               {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </button>
-            <Link to="/login" className="text-[#9ca3af] hover:text-[#f9fafb] transition-colors">
+            <Link to="/login" className="text-muted-foreground hover:text-foreground transition-colors">
               Sign in
             </Link>
             <Link
               to="/signup"
-              className="rounded-md bg-[#10b981] px-3.5 py-1.5 text-sm font-medium text-white hover:bg-[#059669] transition-colors"
+              className="rounded-md bg-primary px-3.5 py-1.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
             >
               Get started free
             </Link>
           </div>
           <div className="flex items-center gap-3 sm:hidden">
-            <button onClick={toggle} className="text-[#9ca3af] hover:text-[#f9fafb]">
+            <button onClick={toggle} className="text-muted-foreground hover:text-foreground">
               {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </button>
-            <button className="text-[#9ca3af] hover:text-white" onClick={() => setMobileNav((v) => !v)}>
+            <button className="text-muted-foreground hover:text-foreground" onClick={() => setMobileNav((v) => !v)}>
               {mobileNav ? <XIcon className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
           </div>
         </div>
         {mobileNav && (
-          <div className="sm:hidden border-t border-[#1f2937] bg-[#0a0a0a]/95 backdrop-blur-md px-5 py-4 space-y-3">
-            <Link to="/docs" onClick={() => setMobileNav(false)} className="block text-sm text-[#9ca3af] hover:text-white transition-colors">Documentation</Link>
-            <Link to="/login" onClick={() => setMobileNav(false)} className="block text-sm text-[#9ca3af] hover:text-white transition-colors">Sign in</Link>
-            <Link to="/signup" onClick={() => setMobileNav(false)} className="block rounded-md bg-[#10b981] px-3.5 py-1.5 text-sm font-medium text-white hover:bg-[#059669] transition-colors text-center">Get started free</Link>
+          <div className="sm:hidden border-t border-border bg-background/95 backdrop-blur-md px-5 py-4 space-y-3">
+            <Link to="/docs" onClick={() => setMobileNav(false)} className="block text-sm text-muted-foreground hover:text-foreground transition-colors">Documentation</Link>
+            <Link to="/login" onClick={() => setMobileNav(false)} className="block text-sm text-muted-foreground hover:text-foreground transition-colors">Sign in</Link>
+            <Link to="/signup" onClick={() => setMobileNav(false)} className="block rounded-md bg-primary px-3.5 py-1.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors text-center">Get started free</Link>
           </div>
         )}
       </nav>
@@ -201,14 +201,14 @@ export default function Landing() {
       <Section className="relative flex min-h-[85vh] flex-col items-center justify-center px-5 pt-14 text-center">
         <motion.div
           variants={fadeUp}
-          className="mb-6 inline-flex items-center rounded border border-[#1f2937] bg-transparent px-3 py-1 text-xs font-medium text-[#9ca3af]"
+          className="mb-6 inline-flex items-center rounded border border-border bg-transparent px-3 py-1 text-xs font-medium text-muted-foreground"
         >
           Prompt infrastructure for LLM apps
         </motion.div>
 
         <motion.h1
           variants={fadeUp}
-          className="text-4xl sm:text-5xl md:text-6xl font-bold leading-[1.1] tracking-tight text-white"
+          className="text-4xl sm:text-5xl md:text-6xl font-bold leading-[1.1] tracking-tight text-foreground"
         >
           Your prompts deserve
           <br />
@@ -217,7 +217,7 @@ export default function Landing() {
 
         <motion.p
           variants={fadeUp}
-          className="mt-6 max-w-[560px] text-base sm:text-lg text-[#9ca3af] leading-relaxed"
+          className="mt-6 max-w-[560px] text-base sm:text-lg text-muted-foreground leading-relaxed"
         >
           Stop hardcoding prompts in your source code. Versera gives you Git-style
           versioning, environment promotion, and a resolve API — so you can ship
@@ -227,19 +227,19 @@ export default function Landing() {
         <motion.div variants={fadeUp} className="mt-8 flex flex-wrap items-center justify-center gap-3">
           <Link
             to="/signup"
-            className="rounded-md bg-[#10b981] px-6 py-2.5 text-sm font-medium text-white hover:bg-[#059669] transition-colors"
+            className="rounded-md bg-primary px-6 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
           >
             Start for free
           </Link>
           <Link
             to="/docs"
-            className="rounded-md border border-[#374151] px-6 py-2.5 text-sm font-medium text-[#9ca3af] hover:border-[#6b7280] hover:text-white transition-colors"
+            className="rounded-md border border-strong-border px-6 py-2.5 text-sm font-medium text-muted-foreground hover:border-tertiary-foreground hover:text-foreground transition-colors"
           >
             View docs
           </Link>
         </motion.div>
 
-        <motion.p variants={fadeUp} className="mt-5 text-xs text-[#6b7280]">
+        <motion.p variants={fadeUp} className="mt-5 text-xs text-tertiary-foreground">
           Free to start · No credit card required · 1,000 credits included
         </motion.p>
       </Section>
@@ -255,10 +255,10 @@ export default function Landing() {
             <motion.div
               key={c.title}
               variants={fadeUp}
-              className="rounded-lg border border-[#1f2937] bg-[#111111] p-6 border-l-2 border-l-[#10b981]"
+              className="rounded-lg border border-border bg-card p-6 border-l-2 border-l-primary"
             >
-              <h3 className="text-base font-semibold mb-2 text-[#f9fafb]">{c.title}</h3>
-              <p className="text-sm text-[#9ca3af] leading-relaxed">{c.body}</p>
+              <h3 className="text-base font-semibold mb-2 text-foreground">{c.title}</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">{c.body}</p>
             </motion.div>
           ))}
         </div>
@@ -270,79 +270,79 @@ export default function Landing() {
           Wait... explain it like I'm 10
         </motion.h2>
 
-        <motion.div variants={fadeUp} className="rounded-lg bg-[#111111] border border-[#1f2937] border-l-2 border-l-[#10b981] p-6 sm:p-8">
+        <motion.div variants={fadeUp} className="rounded-lg bg-card border border-border border-l-2 border-l-primary p-6 sm:p-8">
           <div className="space-y-4">
             {/* Child */}
             <div className="flex items-start gap-3 max-w-[85%]">
-              <div className="shrink-0 h-8 w-8 rounded-full bg-[#1f2937] flex items-center justify-center text-xs font-bold text-[#d1d5db]">K</div>
+              <div className="shrink-0 h-8 w-8 rounded-full bg-muted flex items-center justify-center text-xs font-bold text-muted-foreground">K</div>
               <div>
-                <div className="rounded-lg bg-[#1f2937] px-4 py-2.5 text-sm text-[#d1d5db]">So like... what IS Versera actually?</div>
-                <p className="text-[10px] text-[#6b7280] mt-1 ml-1">12:01 PM</p>
+                <div className="rounded-lg bg-muted px-4 py-2.5 text-sm text-foreground/80">So like... what IS Versera actually?</div>
+                <p className="text-[10px] text-tertiary-foreground mt-1 ml-1">12:01 PM</p>
               </div>
             </div>
             {/* Versera */}
             <div className="flex items-start gap-3 max-w-[85%] ml-auto flex-row-reverse">
-              <div className="shrink-0 h-8 w-8 rounded-full bg-[#10b981] flex items-center justify-center text-xs font-bold text-white">V</div>
+              <div className="shrink-0 h-8 w-8 rounded-full bg-primary flex items-center justify-center text-xs font-bold text-primary-foreground">V</div>
               <div>
-                <div className="rounded-lg bg-[#10b981] px-4 py-2.5 text-sm text-white">You know how you save different versions of your homework? Like homework_v1, homework_v2, homework_FINAL? Versera does that for AI instructions.</div>
-                <p className="text-[10px] text-[#6b7280] mt-1 mr-1 text-right">12:01 PM</p>
+                <div className="rounded-lg bg-primary px-4 py-2.5 text-sm text-primary-foreground">You know how you save different versions of your homework? Like homework_v1, homework_v2, homework_FINAL? Versera does that for AI instructions.</div>
+                <p className="text-[10px] text-tertiary-foreground mt-1 mr-1 text-right">12:01 PM</p>
               </div>
             </div>
             {/* Child */}
             <div className="flex items-start gap-3 max-w-[85%]">
-              <div className="shrink-0 h-8 w-8 rounded-full bg-[#1f2937] flex items-center justify-center text-xs font-bold text-[#d1d5db]">K</div>
+              <div className="shrink-0 h-8 w-8 rounded-full bg-muted flex items-center justify-center text-xs font-bold text-muted-foreground">K</div>
               <div>
-                <div className="rounded-lg bg-[#1f2937] px-4 py-2.5 text-sm text-[#d1d5db]">Oh! And what's an AI instruction?</div>
-                <p className="text-[10px] text-[#6b7280] mt-1 ml-1">12:02 PM</p>
+                <div className="rounded-lg bg-muted px-4 py-2.5 text-sm text-foreground/80">Oh! And what's an AI instruction?</div>
+                <p className="text-[10px] text-tertiary-foreground mt-1 ml-1">12:02 PM</p>
               </div>
             </div>
             {/* Versera */}
             <div className="flex items-start gap-3 max-w-[85%] ml-auto flex-row-reverse">
-              <div className="shrink-0 h-8 w-8 rounded-full bg-[#10b981] flex items-center justify-center text-xs font-bold text-white">V</div>
+              <div className="shrink-0 h-8 w-8 rounded-full bg-primary flex items-center justify-center text-xs font-bold text-primary-foreground">V</div>
               <div>
-                <div className="rounded-lg bg-[#10b981] px-4 py-2.5 text-sm text-white">When you tell an AI "summarize this in a funny way" — that instruction is called a prompt. Developers write thousands of these.</div>
-                <p className="text-[10px] text-[#6b7280] mt-1 mr-1 text-right">12:02 PM</p>
+                <div className="rounded-lg bg-primary px-4 py-2.5 text-sm text-primary-foreground">When you tell an AI "summarize this in a funny way" — that instruction is called a prompt. Developers write thousands of these.</div>
+                <p className="text-[10px] text-tertiary-foreground mt-1 mr-1 text-right">12:02 PM</p>
               </div>
             </div>
             {/* Child */}
             <div className="flex items-start gap-3 max-w-[85%]">
-              <div className="shrink-0 h-8 w-8 rounded-full bg-[#1f2937] flex items-center justify-center text-xs font-bold text-[#d1d5db]">K</div>
+              <div className="shrink-0 h-8 w-8 rounded-full bg-muted flex items-center justify-center text-xs font-bold text-muted-foreground">K</div>
               <div>
-                <div className="rounded-lg bg-[#1f2937] px-4 py-2.5 text-sm text-[#d1d5db]">And they just... forget which one worked?</div>
-                <p className="text-[10px] text-[#6b7280] mt-1 ml-1">12:03 PM</p>
+                <div className="rounded-lg bg-muted px-4 py-2.5 text-sm text-foreground/80">And they just... forget which one worked?</div>
+                <p className="text-[10px] text-tertiary-foreground mt-1 ml-1">12:03 PM</p>
               </div>
             </div>
             {/* Versera */}
             <div className="flex items-start gap-3 max-w-[85%] ml-auto flex-row-reverse">
-              <div className="shrink-0 h-8 w-8 rounded-full bg-[#10b981] flex items-center justify-center text-xs font-bold text-white">V</div>
+              <div className="shrink-0 h-8 w-8 rounded-full bg-primary flex items-center justify-center text-xs font-bold text-primary-foreground">V</div>
               <div>
-                <div className="rounded-lg bg-[#10b981] px-4 py-2.5 text-sm text-white">Exactly! They change it, it breaks, and they can't remember what it said before. Versera saves every version so they can go back instantly.</div>
-                <p className="text-[10px] text-[#6b7280] mt-1 mr-1 text-right">12:03 PM</p>
+                <div className="rounded-lg bg-primary px-4 py-2.5 text-sm text-primary-foreground">Exactly! They change it, it breaks, and they can't remember what it said before. Versera saves every version so they can go back instantly.</div>
+                <p className="text-[10px] text-tertiary-foreground mt-1 mr-1 text-right">12:03 PM</p>
               </div>
             </div>
             {/* Child */}
             <div className="flex items-start gap-3 max-w-[85%]">
-              <div className="shrink-0 h-8 w-8 rounded-full bg-[#1f2937] flex items-center justify-center text-xs font-bold text-[#d1d5db]">K</div>
+              <div className="shrink-0 h-8 w-8 rounded-full bg-muted flex items-center justify-center text-xs font-bold text-muted-foreground">K</div>
               <div>
-                <div className="rounded-lg bg-[#1f2937] px-4 py-2.5 text-sm text-[#d1d5db]">That sounds really useful actually 😮</div>
-                <p className="text-[10px] text-[#6b7280] mt-1 ml-1">12:04 PM</p>
+                <div className="rounded-lg bg-muted px-4 py-2.5 text-sm text-foreground/80">That sounds really useful actually 😮</div>
+                <p className="text-[10px] text-tertiary-foreground mt-1 ml-1">12:04 PM</p>
               </div>
             </div>
             {/* Versera */}
             <div className="flex items-start gap-3 max-w-[85%] ml-auto flex-row-reverse">
-              <div className="shrink-0 h-8 w-8 rounded-full bg-[#10b981] flex items-center justify-center text-xs font-bold text-white">V</div>
+              <div className="shrink-0 h-8 w-8 rounded-full bg-primary flex items-center justify-center text-xs font-bold text-primary-foreground">V</div>
               <div>
-                <div className="rounded-lg bg-[#10b981] px-4 py-2.5 text-sm text-white">Right? And it costs less than a cup of coffee to get started.</div>
-                <p className="text-[10px] text-[#6b7280] mt-1 mr-1 text-right">12:04 PM</p>
+                <div className="rounded-lg bg-primary px-4 py-2.5 text-sm text-primary-foreground">Right? And it costs less than a cup of coffee to get started.</div>
+                <p className="text-[10px] text-tertiary-foreground mt-1 mr-1 text-right">12:04 PM</p>
               </div>
             </div>
           </div>
 
           <div className="mt-8 text-center">
-            <p className="text-sm text-[#9ca3af] mb-3">Makes sense now?</p>
+            <p className="text-sm text-muted-foreground mb-3">Makes sense now?</p>
             <Link
               to="/signup"
-              className="inline-block rounded-md bg-[#10b981] px-6 py-2.5 text-sm font-medium text-white hover:bg-[#059669] transition-colors"
+              className="inline-block rounded-md bg-primary px-6 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
             >
               Get started free →
             </Link>
@@ -355,15 +355,15 @@ export default function Landing() {
         <motion.h2 variants={fadeUp} className="text-center text-3xl font-bold mb-3">
           Fix it with three API calls
         </motion.h2>
-        <motion.p variants={fadeUp} className="text-center text-[#9ca3af] mb-10">
+        <motion.p variants={fadeUp} className="text-center text-muted-foreground mb-10">
           Integrate in minutes. Works with any LLM.
         </motion.p>
 
         <motion.div
           variants={fadeUp}
-          className="relative rounded-lg border border-[#1f2937] bg-[#111111] overflow-hidden"
+          className="relative rounded-lg border border-border bg-card overflow-hidden"
         >
-          <div className="flex items-center justify-between border-b border-[#1f2937] px-4 py-2.5">
+          <div className="flex items-center justify-between border-b border-border px-4 py-2.5">
             <div className="flex gap-1.5">
               <span className="h-3 w-3 rounded-full bg-[#ff5f57]" />
               <span className="h-3 w-3 rounded-full bg-[#febc2e]" />
@@ -371,7 +371,7 @@ export default function Landing() {
             </div>
             <button
               onClick={copyCode}
-              className="rounded px-2.5 py-1 text-xs text-[#6b7280] hover:text-[#f9fafb] hover:bg-white/5 transition-colors"
+              className="rounded px-2.5 py-1 text-xs text-tertiary-foreground hover:text-foreground hover:bg-muted transition-colors"
             >
               Copy
             </button>
@@ -383,7 +383,7 @@ export default function Landing() {
           >
             {codeLines.map((line, i) => (
               <div key={i} className="flex">
-                <span className="inline-block w-8 shrink-0 select-none text-right text-[#374151] pr-4">
+                <span className="inline-block w-8 shrink-0 select-none text-right text-strong-border pr-4">
                   {line.type !== "blank" ? i + 1 : ""}
                 </span>
                 <span className={colorLine(line)}>{line.text}</span>
@@ -404,13 +404,13 @@ export default function Landing() {
             <motion.div
               key={f.title}
               variants={fadeUp}
-              className="rounded-lg border border-[#1f2937] bg-[#111111] p-7"
+              className="rounded-lg border border-border bg-card p-7"
             >
-              <div className="mb-4 flex h-9 w-9 items-center justify-center rounded-md bg-[#10b981]/10 text-[#10b981]">
+              <div className="mb-4 flex h-9 w-9 items-center justify-center rounded-md bg-primary/10 text-primary">
                 <f.icon className="h-4.5 w-4.5" />
               </div>
-              <h3 className="text-base font-semibold mb-2 text-[#f9fafb]">{f.title}</h3>
-              <p className="text-sm text-[#9ca3af] leading-relaxed">{f.body}</p>
+              <h3 className="text-base font-semibold mb-2 text-foreground">{f.title}</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">{f.body}</p>
             </motion.div>
           ))}
         </div>
@@ -421,26 +421,26 @@ export default function Landing() {
         <motion.h2 variants={fadeUp} className="text-center text-3xl font-bold mb-3">
           A dashboard built for developers
         </motion.h2>
-        <motion.p variants={fadeUp} className="text-center text-[#9ca3af] mb-12">
+        <motion.p variants={fadeUp} className="text-center text-muted-foreground mb-12">
           Manage all your prompts, versions, and API keys from one clean interface.
         </motion.p>
 
         <motion.div variants={fadeUp} className="relative">
-          <div className="relative rounded-lg border border-[#1f2937] bg-[#0f0f0f] overflow-hidden">
-            <div className="flex items-center gap-2 border-b border-[#1f2937] px-4 py-3">
+          <div className="relative rounded-lg border border-border bg-background overflow-hidden">
+            <div className="flex items-center gap-2 border-b border-border px-4 py-3">
               <span className="h-3 w-3 rounded-full bg-[#ff5f57]" />
               <span className="h-3 w-3 rounded-full bg-[#febc2e]" />
               <span className="h-3 w-3 rounded-full bg-[#28c840]" />
-              <span className="ml-4 text-xs text-[#6b7280]">versera.dev/dashboard</span>
+              <span className="ml-4 text-xs text-tertiary-foreground">versera.dev/dashboard</span>
             </div>
 
             <div className="flex min-h-[420px]">
-              <div className="hidden md:flex w-52 flex-col border-r border-[#1f2937] bg-[#0f0f0f] p-4">
-                <span className="text-base font-bold text-[#10b981] mb-6">Versera</span>
+              <div className="hidden md:flex w-52 flex-col border-r border-border bg-background p-4">
+                <span className="text-base font-bold text-primary mb-6">Versera</span>
                 {["Dashboard", "Prompts", "API Keys", "Billing"].map((item, idx) => (
                   <span
                     key={item}
-                    className={`rounded-md px-3 py-1.5 text-sm mb-1 ${idx === 0 ? "bg-white/[0.06] text-white" : "text-[#6b7280]"}`}
+                    className={`rounded-md px-3 py-1.5 text-sm mb-1 ${idx === 0 ? "bg-muted text-foreground" : "text-tertiary-foreground"}`}
                   >
                     {item}
                   </span>
@@ -457,17 +457,17 @@ export default function Landing() {
                     { label: "Credits", value: "8,420" },
                     { label: "Active Versions", value: "31" },
                   ].map((m) => (
-                    <div key={m.label} className="rounded-md border border-[#1f2937] bg-[#111111] p-4">
-                      <p className="text-[11px] text-[#6b7280]">{m.label}</p>
+                    <div key={m.label} className="rounded-md border border-border bg-card p-4">
+                      <p className="text-[11px] text-tertiary-foreground">{m.label}</p>
                       <p className="mt-1 text-xl font-semibold">{m.value}</p>
                     </div>
                   ))}
                 </div>
 
-                <div className="rounded-md border border-[#1f2937] overflow-hidden">
+                <div className="rounded-md border border-border overflow-hidden">
                   <table className="w-full text-sm">
                     <thead>
-                      <tr className="border-b border-[#1f2937] text-left text-xs text-[#6b7280]">
+                      <tr className="border-b border-border text-left text-xs text-tertiary-foreground">
                         <th className="px-4 py-2.5 font-medium">Name</th>
                         <th className="px-4 py-2.5 font-medium hidden sm:table-cell">Version</th>
                         <th className="px-4 py-2.5 font-medium hidden sm:table-cell">Env</th>
@@ -477,7 +477,7 @@ export default function Landing() {
                     </thead>
                     <tbody>
                       {mockPrompts.map((p) => (
-                        <tr key={p.name} className="border-b border-[#1f2937] last:border-0">
+                        <tr key={p.name} className="border-b border-border last:border-0">
                           <td className="px-4 py-2.5 font-mono text-xs font-medium">{p.name}</td>
                           <td className="px-4 py-2.5 font-mono text-xs hidden sm:table-cell">{p.ver}</td>
                           <td className="px-4 py-2.5 hidden sm:table-cell">
@@ -485,8 +485,8 @@ export default function Landing() {
                               {p.env}
                             </span>
                           </td>
-                          <td className="px-4 py-2.5 text-xs hidden lg:table-cell text-[#9ca3af]">{p.status}</td>
-                          <td className="px-4 py-2.5 text-xs hidden lg:table-cell text-[#6b7280]">{p.updated}</td>
+                          <td className="px-4 py-2.5 text-xs hidden lg:table-cell text-muted-foreground">{p.status}</td>
+                          <td className="px-4 py-2.5 text-xs hidden lg:table-cell text-tertiary-foreground">{p.updated}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -506,7 +506,7 @@ export default function Landing() {
         <motion.h2 variants={fadeUp} className="text-center text-3xl font-bold mb-3">
           Simple, usage-based pricing
         </motion.h2>
-        <motion.p variants={fadeUp} className="text-center text-[#9ca3af] mb-12">
+        <motion.p variants={fadeUp} className="text-center text-muted-foreground mb-12">
           Buy credits once. Use them forever. No subscriptions, no surprises.
         </motion.p>
 
@@ -515,27 +515,27 @@ export default function Landing() {
             <motion.div
               key={p.name}
               variants={fadeUp}
-              className={`rounded-lg border p-6 flex flex-col bg-[#111111] ${
-                p.featured ? "border-[#10b981]" : "border-[#1f2937]"
+              className={`rounded-lg border p-6 flex flex-col bg-card ${
+                p.featured ? "border-primary" : "border-border"
               }`}
             >
               <div className="flex items-center gap-2 mb-4">
                 <h3 className="text-lg font-semibold">{p.name}</h3>
                 {p.featured && (
-                  <span className="rounded-full bg-[#10b981]/10 border border-[#10b981] px-2.5 py-0.5 text-[11px] font-semibold text-[#10b981]">
+                  <span className="rounded-full bg-primary/10 border border-primary px-2.5 py-0.5 text-[11px] font-semibold text-primary">
                     Most popular
                   </span>
                 )}
               </div>
               <p className="text-3xl font-bold mb-1">${p.price}</p>
-              <p className="text-sm text-[#9ca3af] mb-1">{p.credits} credits</p>
-              <p className="text-xs text-[#6b7280] mb-6">{p.resolves}</p>
+              <p className="text-sm text-muted-foreground mb-1">{p.credits} credits</p>
+              <p className="text-xs text-tertiary-foreground mb-6">{p.resolves}</p>
               <Link
                 to="/signup"
                 className={`mt-auto text-center rounded-md py-2.5 text-sm font-medium transition-colors ${
                   p.featured
-                    ? "bg-[#10b981] text-white hover:bg-[#059669]"
-                    : "bg-white/[0.06] text-[#d1d5db] hover:bg-white/10"
+                    ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                    : "bg-muted text-foreground/80 hover:bg-muted/80"
                 }`}
               >
                 Get started
@@ -544,7 +544,7 @@ export default function Landing() {
           ))}
         </div>
 
-        <motion.p variants={fadeUp} className="mt-8 text-center text-xs text-[#6b7280]">
+        <motion.p variants={fadeUp} className="mt-8 text-center text-xs text-tertiary-foreground">
           Every new account gets 1,000 free credits. No credit card required to start.
         </motion.p>
       </Section>
@@ -553,17 +553,17 @@ export default function Landing() {
       <Section className="mx-auto max-w-6xl px-5 py-24">
         <motion.div
           variants={fadeUp}
-          className="border-t border-b border-[#1f2937] bg-[#111111] px-8 py-16 text-center rounded-lg"
+          className="border-t border-b border-border bg-card px-8 py-16 text-center rounded-lg"
         >
-          <h2 className="text-3xl font-bold text-white mb-3">
+          <h2 className="text-3xl font-bold text-foreground mb-3">
             Ready to version your prompts?
           </h2>
-          <p className="text-[#9ca3af] mb-8 max-w-md mx-auto">
+          <p className="text-muted-foreground mb-8 max-w-md mx-auto">
             Join developers who've stopped hardcoding prompts and started shipping faster.
           </p>
           <Link
             to="/signup"
-            className="inline-block rounded-md bg-[#10b981] px-8 py-3 text-sm font-medium text-white hover:bg-[#059669] transition-colors"
+            className="inline-block rounded-md bg-primary px-8 py-3 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
           >
             Get started free
           </Link>
@@ -571,46 +571,46 @@ export default function Landing() {
       </Section>
 
       {/* ====== FOOTER ====== */}
-      <footer className="border-t border-[#1f2937] bg-[#0a0a0a] px-5 py-14">
+      <footer className="border-t border-border bg-background px-5 py-14">
         <div className="mx-auto grid max-w-5xl gap-10 sm:grid-cols-2 md:grid-cols-4">
           <div>
-            <span className="text-lg font-bold text-[#10b981]">Versera</span>
-            <p className="mt-2 text-sm text-[#6b7280]">
+            <span className="text-lg font-bold text-primary">Versera</span>
+            <p className="mt-2 text-sm text-tertiary-foreground">
               Prompt version control for LLM apps
             </p>
           </div>
           <div>
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-[#6b7280] mb-3">
+            <h4 className="text-xs font-semibold uppercase tracking-wider text-tertiary-foreground mb-3">
               Product
             </h4>
-            <ul className="space-y-2 text-sm text-[#6b7280]">
-              <li><Link to="/dashboard" className="hover:text-[#f9fafb] transition-colors">Dashboard</Link></li>
-              <li><Link to="/api-keys" className="hover:text-[#f9fafb] transition-colors">API Keys</Link></li>
-              <li><Link to="/billing" className="hover:text-[#f9fafb] transition-colors">Billing</Link></li>
-              <li><Link to="/login" className="hover:text-[#f9fafb] transition-colors">Sign in</Link></li>
+            <ul className="space-y-2 text-sm text-tertiary-foreground">
+              <li><Link to="/dashboard" className="hover:text-foreground transition-colors">Dashboard</Link></li>
+              <li><Link to="/api-keys" className="hover:text-foreground transition-colors">API Keys</Link></li>
+              <li><Link to="/billing" className="hover:text-foreground transition-colors">Billing</Link></li>
+              <li><Link to="/login" className="hover:text-foreground transition-colors">Sign in</Link></li>
             </ul>
           </div>
           <div>
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-[#6b7280] mb-3">
+            <h4 className="text-xs font-semibold uppercase tracking-wider text-tertiary-foreground mb-3">
               Company
             </h4>
-            <ul className="space-y-2 text-sm text-[#6b7280]">
-              <li><Link to="/docs" className="hover:text-[#f9fafb] transition-colors">Documentation</Link></li>
-              <li><a href="https://github.com/steevy-cpu/versera-app" target="_blank" rel="noopener noreferrer" className="hover:text-[#f9fafb] transition-colors">GitHub</a></li>
-              <li><a href="https://x.com/CelestinSt29387" target="_blank" rel="noopener noreferrer" className="hover:text-[#f9fafb] transition-colors">Twitter / X</a></li>
+            <ul className="space-y-2 text-sm text-tertiary-foreground">
+              <li><Link to="/docs" className="hover:text-foreground transition-colors">Documentation</Link></li>
+              <li><a href="https://github.com/steevy-cpu/versera-app" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">GitHub</a></li>
+              <li><a href="https://x.com/CelestinSt29387" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Twitter / X</a></li>
             </ul>
           </div>
           <div>
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-[#6b7280] mb-3">
+            <h4 className="text-xs font-semibold uppercase tracking-wider text-tertiary-foreground mb-3">
               Legal
             </h4>
-            <ul className="space-y-2 text-sm text-[#6b7280]">
-              <li><Link to="/terms" className="hover:text-[#f9fafb] transition-colors">Terms of Service</Link></li>
-              <li><Link to="/privacy" className="hover:text-[#f9fafb] transition-colors">Privacy Policy</Link></li>
+            <ul className="space-y-2 text-sm text-tertiary-foreground">
+              <li><Link to="/terms" className="hover:text-foreground transition-colors">Terms of Service</Link></li>
+              <li><Link to="/privacy" className="hover:text-foreground transition-colors">Privacy Policy</Link></li>
             </ul>
           </div>
         </div>
-        <p className="mt-12 text-center text-xs text-[#374151]">
+        <p className="mt-12 text-center text-xs text-strong-border">
           © 2026 Versera. Built for developers.
         </p>
       </footer>
@@ -656,7 +656,7 @@ function TestimonialsSection() {
       <motion.h2 variants={fadeUp} className="text-center text-3xl font-bold mb-4">
         Share your experience
       </motion.h2>
-      <motion.p variants={fadeUp} className="text-center text-[#9ca3af] max-w-[500px] mx-auto mb-12">
+      <motion.p variants={fadeUp} className="text-center text-muted-foreground max-w-[500px] mx-auto mb-12">
         Used Versera? We'd love to hear from you. Real testimonials from real developers.
       </motion.p>
 
@@ -667,23 +667,23 @@ function TestimonialsSection() {
             <motion.div
               key={t.id}
               variants={fadeUp}
-              className="rounded-lg border border-[#1f2937] bg-[#111111] p-6"
+              className="rounded-lg border border-border bg-card p-6"
             >
               <div className="flex gap-0.5 mb-3">
                 {Array.from({ length: 5 }).map((_, i) => (
-                  <span key={i} className="text-base" style={{ color: i < t.rating ? "#10b981" : undefined }}>
-                    {i < t.rating ? "★" : <span className="text-[#374151]">★</span>}
+                  <span key={i} className={`text-base ${i < t.rating ? "text-primary" : "text-strong-border"}`}>
+                    ★
                   </span>
                 ))}
               </div>
-              <p className="text-sm text-[#d1d5db] leading-relaxed mb-4">"{t.content}"</p>
+              <p className="text-sm text-foreground/80 leading-relaxed mb-4">"{t.content}"</p>
               <div className="flex items-center gap-3">
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#10b981]/10 text-xs font-bold text-[#10b981]">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
                   {t.name.split(" ").map((w) => w[0]).join("").slice(0, 2).toUpperCase()}
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-[#f9fafb]">{t.name}</p>
-                  <p className="text-xs text-[#6b7280]">{t.role}</p>
+                  <p className="text-sm font-medium text-foreground">{t.name}</p>
+                  <p className="text-xs text-tertiary-foreground">{t.role}</p>
                 </div>
               </div>
             </motion.div>
@@ -698,9 +698,9 @@ function TestimonialsSection() {
             <motion.div
               key={i}
               variants={fadeUp}
-              className="rounded-lg border border-dashed border-[#374151] bg-[#111111] p-10 flex items-center justify-center min-h-[160px]"
+              className="rounded-lg border border-dashed border-strong-border bg-card p-10 flex items-center justify-center min-h-[160px]"
             >
-              <p className="text-sm text-[#374151]">Your review here</p>
+              <p className="text-sm text-strong-border">Your review here</p>
             </motion.div>
           ))}
         </div>
@@ -709,50 +709,50 @@ function TestimonialsSection() {
       {/* Submission form */}
       <motion.div variants={fadeUp} className="mx-auto max-w-[640px]">
         {submitted ? (
-          <div className="rounded-lg bg-[#111111] border border-[#1f2937] p-8 text-center">
-            <p className="text-[#10b981] font-medium mb-2">Thank you!</p>
-            <p className="text-sm text-[#9ca3af]">
+          <div className="rounded-lg bg-card border border-border p-8 text-center">
+            <p className="text-primary font-medium mb-2">Thank you!</p>
+            <p className="text-sm text-muted-foreground">
               Your testimonial has been submitted for review. We'll feature it on the site once approved.
             </p>
           </div>
         ) : (
-          <div className="rounded-lg bg-[#111111] border border-[#1f2937] p-8 space-y-4">
+          <div className="rounded-lg bg-card border border-border p-8 space-y-4">
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Your name"
-              className="w-full rounded-md border border-[#1f2937] bg-[#0a0a0a] px-3 py-2.5 text-sm text-white placeholder:text-[#374151] focus:outline-none focus:border-[#10b981]/50"
+              className="w-full rounded-md border border-border bg-background px-3 py-2.5 text-sm text-foreground placeholder:text-strong-border focus:outline-none focus:border-primary/50"
             />
             <input
               value={role}
               onChange={(e) => setRole(e.target.value)}
               placeholder="e.g. Senior Engineer at Acme"
-              className="w-full rounded-md border border-[#1f2937] bg-[#0a0a0a] px-3 py-2.5 text-sm text-white placeholder:text-[#374151] focus:outline-none focus:border-[#10b981]/50"
+              className="w-full rounded-md border border-border bg-background px-3 py-2.5 text-sm text-foreground placeholder:text-strong-border focus:outline-none focus:border-primary/50"
             />
             <textarea
               value={content}
               onChange={(e) => setContent(e.target.value)}
               rows={4}
               placeholder="What problem did Versera solve for you? What's your favorite feature?"
-              className="w-full rounded-md border border-[#1f2937] bg-[#0a0a0a] px-3 py-2.5 text-sm text-white placeholder:text-[#374151] focus:outline-none focus:border-[#10b981]/50 resize-none"
+              className="w-full rounded-md border border-border bg-background px-3 py-2.5 text-sm text-foreground placeholder:text-strong-border focus:outline-none focus:border-primary/50 resize-none"
             />
             <div className="flex items-center gap-2">
-              <span className="text-sm text-[#9ca3af]">Rating:</span>
+              <span className="text-sm text-muted-foreground">Rating:</span>
               <div className="flex gap-1">
                 {[1, 2, 3, 4, 5].map((s) => (
                   <button key={s} onClick={() => setRating(s)} className="focus:outline-none">
-                    <Star className={`h-5 w-5 transition-colors ${s <= rating ? "fill-[#10b981] text-[#10b981]" : "text-[#374151] hover:text-[#6b7280]"}`} />
+                    <Star className={`h-5 w-5 transition-colors ${s <= rating ? "fill-primary text-primary" : "text-strong-border hover:text-tertiary-foreground"}`} />
                   </button>
                 ))}
               </div>
             </div>
 
-            {formError && <p className="text-sm text-red-400">{formError}</p>}
+            {formError && <p className="text-sm text-destructive">{formError}</p>}
 
             <button
               onClick={handleSubmit}
               disabled={submitting}
-              className="w-full rounded-md bg-[#10b981] px-6 py-2.5 text-sm font-medium text-white hover:bg-[#059669] transition-colors disabled:opacity-50"
+              className="w-full rounded-md bg-primary px-6 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors disabled:opacity-50"
             >
               {submitting ? "Submitting..." : "Submit testimonial"}
             </button>
