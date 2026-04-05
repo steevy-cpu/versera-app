@@ -32,10 +32,12 @@ export default function Billing() {
   const isCancelled = searchParams.get("cancelled") === "true";
 
   // Refresh data when returning from successful checkout
-  if (isSuccess) {
-    refetchUser();
-    refetchTx();
-  }
+  useEffect(() => {
+    if (isSuccess) {
+      refetchUser();
+      refetchTx();
+    }
+  }, [isSuccess, refetchUser, refetchTx]);
 
   const usagePercent =
     user ? (user.credits / Math.max(user.totalCredits, 1)) * 100 : 0;
