@@ -31,9 +31,9 @@ export function useAdminTestimonials() {
     queryKey: ["admin", "testimonials"],
     queryFn: async () => {
       try {
-        return await api.get<Testimonial[]>("/v1/admin/testimonials");
+        return await api.get<Testimonial[]>("/v1/testimonials/admin");
       } catch {
-        console.log("GET /v1/admin/testimonials not available yet — returning empty");
+        console.log("GET /v1/testimonials/admin not available yet — returning empty");
         return [];
       }
     },
