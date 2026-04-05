@@ -8,7 +8,7 @@ import promptRoutes from "./routes/prompts";
 import versionRoutes from "./routes/versions";
 import resolveRoutes from "./routes/resolve";
 import apiKeyRoutes from "./routes/apiKeys";
-import billingRoutes from "./routes/billing";
+import billingRoutes, { stripeWebhook } from "./routes/billing";
 
 const app = express();
 const PORT = process.env.PORT ?? 3001;
@@ -42,10 +42,7 @@ app.use(
 app.post(
   "/v1/billing/webhook",
   express.raw({ type: "application/json" }),
-  (_req, res) => {
-    // Handled inside billingRoutes — this entry point just ensures correct body parsing
-    res.status(200).json({ received: true });
-  }
+  stripeWebhook
 );
 
 app.use(express.json());
