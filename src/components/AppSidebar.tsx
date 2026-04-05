@@ -1,8 +1,9 @@
-import { LayoutDashboard, FileText, Key, CreditCard, Settings as SettingsIcon, LogOut } from "lucide-react";
+import { LayoutDashboard, FileText, Key, CreditCard, Settings as SettingsIcon, LogOut, Sun, Moon } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
 import { useMe } from "@/hooks/useAuth";
 import { getUser, logout } from "@/lib/auth";
+import { useTheme } from "@/components/ThemeToggle";
 import {
   Sidebar,
   SidebarContent,
@@ -26,14 +27,14 @@ export function AppSidebar() {
   const location = useLocation();
   const isActive = (path: string) =>
     location.pathname === path || location.pathname.startsWith(path + "/");
+  const { theme, toggle } = useTheme();
 
-  // Use cached user for instant render, React Query keeps it fresh
   const cached = getUser();
   const { data: user } = useMe();
   const display = user ?? cached;
 
   return (
-    <Sidebar className="border-r-0">
+    <Sidebar className="border-r border-sidebar-border">
       <div className="px-5 py-5">
         <span className="text-xl font-bold tracking-tight text-sidebar-primary">
           Versera
@@ -49,7 +50,7 @@ export function AppSidebar() {
                   <SidebarMenuButton
                     asChild
                     isActive={isActive(item.url)}
-                    className="h-9 gap-3 rounded-md px-3 text-sm font-medium text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-primary"
+                    className="h-9 gap-3 rounded-md px-3 text-sm font-medium text-sidebar-foreground hover:bg-sidebar-accent/[0.08] hover:text-sidebar-accent-foreground data-[active=true]:bg-sidebar-primary/[0.08] data-[active=true]:text-sidebar-primary"
                   >
                     <NavLink to={item.url} activeClassName="">
                       <item.icon className="h-4 w-4" />
@@ -64,8 +65,15 @@ export function AppSidebar() {
       </SidebarContent>
 
       <SidebarFooter className="border-t border-sidebar-border px-4 py-4">
+        <button
+          onClick={toggle}
+          className="flex items-center gap-2 text-xs text-sidebar-foreground hover:text-sidebar-accent-foreground mb-2"
+        >
+          {theme === "dark" ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
+          {theme === "dark" ? "Light mode" : "Dark mode"}
+        </button>
         <div className="flex items-center gap-3">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-sidebar-accent text-xs font-semibold text-sidebar-accent-foreground">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary">
             {display?.avatar ?? "?"}
           </div>
           <div className="flex-1 overflow-hidden">
