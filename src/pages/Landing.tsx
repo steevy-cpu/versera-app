@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import {
   GitBranch,
   ArrowUpRight,
@@ -8,7 +8,10 @@ import {
   FlaskConical,
   Coins,
   Globe,
+  Star,
 } from "lucide-react";
+import { useTestimonials } from "@/hooks/useTestimonials";
+import { api } from "@/lib/api";
 
 /* ------------------------------------------------------------------ */
 /*  Animation helpers                                                  */
@@ -483,39 +486,8 @@ export default function Landing() {
         </motion.div>
       </Section>
 
-      {/* ====== WALL OF LOVE ====== */}
-      <Section className="mx-auto max-w-5xl px-5 py-24">
-        <motion.h2 variants={fadeUp} className="text-center text-3xl font-bold mb-4">
-          Be the first to share your experience
-        </motion.h2>
-        <motion.p variants={fadeUp} className="text-center text-zinc-400 max-w-[500px] mx-auto mb-12">
-          We're just getting started. Try Versera and let us know what you think — we read every message.
-        </motion.p>
-
-        <div className="grid gap-5 md:grid-cols-3">
-          {[0, 1, 2].map((i) => (
-            <motion.div
-              key={i}
-              variants={fadeUp}
-              className="rounded-lg border-2 border-dashed border-white/[0.08] bg-[#111] p-10 flex items-center justify-center min-h-[160px]"
-            >
-              <p className="text-sm text-zinc-600">Your review here</p>
-            </motion.div>
-          ))}
-        </div>
-
-        <motion.div variants={fadeUp} className="mt-10 text-center">
-          <a
-            href="mailto:hello@versera.dev"
-            className="inline-flex items-center gap-1 text-[#7F77DD] hover:text-[#9990EE] font-medium transition-colors"
-          >
-            Share your experience →
-          </a>
-          <p className="mt-4 text-xs text-zinc-600">
-            Real testimonials coming soon. We'll feature your story here.
-          </p>
-        </motion.div>
-      </Section>
+      {/* ====== TESTIMONIALS ====== */}
+      <TestimonialsSection />
 
       {/* ====== PRICING ====== */}
       <Section className="mx-auto max-w-4xl px-5 py-24">
