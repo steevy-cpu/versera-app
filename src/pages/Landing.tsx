@@ -587,7 +587,7 @@ export default function Landing() {
             <ul className="space-y-2 text-sm text-zinc-400">
               <li><Link to="/docs" className="hover:text-white transition-colors">Documentation</Link></li>
               <li><a href="https://github.com/steevy-cpu/versera-app" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">GitHub</a></li>
-              <li><a href="https://x.com/versera_dev" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Twitter / X</a></li>
+              <li><a href="https://x.com/CelestinSt29387" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Twitter / X</a></li>
             </ul>
           </div>
           <div>
