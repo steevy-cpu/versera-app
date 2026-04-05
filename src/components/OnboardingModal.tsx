@@ -12,7 +12,7 @@ function StepDots({ current, total }: { current: number; total: number }) {
         <div
           key={i}
           className={`h-2 w-2 rounded-full transition-colors ${
-            i === current ? "bg-[#7F77DD]" : "bg-zinc-700"
+            i === current ? "bg-[#10b981]" : "bg-zinc-700"
           }`}
         />
       ))}
@@ -53,14 +53,14 @@ export default function OnboardingModal({ onClose }: { onClose: () => void }) {
 
         {step === 0 && (
           <div className="text-center">
-            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#7F77DD]">
+            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#10b981]">
               <span className="text-2xl font-bold text-white">V</span>
             </div>
             <h2 className="text-xl font-bold text-white mb-3">Welcome to Versera</h2>
             <p className="text-sm text-zinc-400 leading-relaxed mb-8 max-w-sm mx-auto">
               You have 1,000 free credits to start. Let's get you set up in 3 quick steps.
             </p>
-            <Button onClick={next} className="bg-[#7F77DD] hover:bg-[#6e66cc] text-white">
+            <Button onClick={next} className="bg-[#10b981] hover:bg-[#059669] text-white">
               Let's go →
             </Button>
           </div>
@@ -76,7 +76,7 @@ export default function OnboardingModal({ onClose }: { onClose: () => void }) {
               <span className="text-zinc-500">template: </span>
               <span className="text-[#6ee7b7]">"Summarize {"{{document}}"} in {"{{tone}}"} style."</span>
             </div>
-            <Button onClick={next} className="bg-[#7F77DD] hover:bg-[#6e66cc] text-white">
+            <Button onClick={next} className="bg-[#10b981] hover:bg-[#059669] text-white">
               Got it →
             </Button>
           </div>
@@ -91,7 +91,7 @@ export default function OnboardingModal({ onClose }: { onClose: () => void }) {
             <div className="rounded-lg border border-white/[0.08] bg-[#0a0a0a] p-4 mb-8 font-mono text-sm text-zinc-400 text-center tracking-wider">
               vrs_live_••••••••••••••••••••
             </div>
-            <Button onClick={next} className="bg-[#7F77DD] hover:bg-[#6e66cc] text-white">
+            <Button onClick={next} className="bg-[#10b981] hover:bg-[#059669] text-white">
               Go to dashboard →
             </Button>
           </div>

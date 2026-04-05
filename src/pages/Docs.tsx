@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Copy, Check, Plus, X, Loader2, Menu } from "lucide-react";
+import { ArrowLeft, Copy, Check, Plus, X, Loader2, Menu, Sun, Moon } from "lucide-react";
+import { useTheme } from "@/components/ThemeToggle";
 
 const API_BASE =
   (import.meta.env.VITE_API_URL as string | undefined) ??
@@ -89,7 +90,7 @@ function TabbedCode({ tabs }: { tabs: { label: string; code: string }[] }) {
             key={t.label}
             onClick={() => setActive(i)}
             className={`px-4 py-2 text-xs font-medium transition-colors ${
-              i === active ? "text-[#7F77DD] border-b-2 border-[#7F77DD]" : "text-zinc-500 hover:text-zinc-300"
+              i === active ? "text-[#10b981] border-b-2 border-[#10b981]" : "text-zinc-500 hover:text-zinc-300"
             }`}
           >
             {t.label}
@@ -130,7 +131,7 @@ function EndpointBadge({ method, path }: { method: "GET" | "POST" | "DELETE"; pa
 
 function SectionHeading({ id, children }: { id: string; children: React.ReactNode }) {
   return (
-    <h2 id={id} className="text-2xl font-bold border-l-4 border-[#7F77DD] pl-4 pt-12 pb-2 scroll-mt-6">
+    <h2 id={id} className="text-2xl font-bold border-l-4 border-[#10b981] pl-4 pt-12 pb-2 scroll-mt-6">
       {children}
     </h2>
   );
@@ -253,7 +254,7 @@ function ApiTester() {
             placeholder="vrs_live_..."
             value={apiKey}
             onChange={(e) => setApiKey(e.target.value)}
-            className="w-full rounded-md bg-[#1a1a1a] border border-white/10 px-3 py-2 text-sm text-white placeholder:text-zinc-600 font-mono focus:outline-none focus:border-[#7F77DD]"
+            className="w-full rounded-md bg-[#1a1a1a] border border-white/10 px-3 py-2 text-sm text-white placeholder:text-zinc-600 font-mono focus:outline-none focus:border-[#10b981]"
           />
         </div>
         <div>
@@ -263,7 +264,7 @@ function ApiTester() {
             placeholder="summarize-doc"
             value={slug}
             onChange={(e) => setSlug(e.target.value)}
-            className="w-full rounded-md bg-[#1a1a1a] border border-white/10 px-3 py-2 text-sm text-white placeholder:text-zinc-600 font-mono focus:outline-none focus:border-[#7F77DD]"
+            className="w-full rounded-md bg-[#1a1a1a] border border-white/10 px-3 py-2 text-sm text-white placeholder:text-zinc-600 font-mono focus:outline-none focus:border-[#10b981]"
           />
         </div>
         <div>
@@ -274,27 +275,27 @@ function ApiTester() {
                 placeholder="key"
                 value={v.key}
                 onChange={(e) => updateVar(i, "key", e.target.value)}
-                className="flex-1 rounded-md bg-[#1a1a1a] border border-white/10 px-3 py-2 text-sm text-white placeholder:text-zinc-600 font-mono focus:outline-none focus:border-[#7F77DD]"
+                className="flex-1 rounded-md bg-[#1a1a1a] border border-white/10 px-3 py-2 text-sm text-white placeholder:text-zinc-600 font-mono focus:outline-none focus:border-[#10b981]"
               />
               <input
                 placeholder="value"
                 value={v.value}
                 onChange={(e) => updateVar(i, "value", e.target.value)}
-                className="flex-1 rounded-md bg-[#1a1a1a] border border-white/10 px-3 py-2 text-sm text-white placeholder:text-zinc-600 font-mono focus:outline-none focus:border-[#7F77DD]"
+                className="flex-1 rounded-md bg-[#1a1a1a] border border-white/10 px-3 py-2 text-sm text-white placeholder:text-zinc-600 font-mono focus:outline-none focus:border-[#10b981]"
               />
               <button onClick={() => removeVar(i)} className="text-zinc-500 hover:text-red-400 transition-colors">
                 <X className="h-4 w-4" />
               </button>
             </div>
           ))}
-          <button onClick={addVar} className="flex items-center gap-1 text-xs text-[#7F77DD] hover:text-[#9b95e8] transition-colors">
+          <button onClick={addVar} className="flex items-center gap-1 text-xs text-[#10b981] hover:text-[#34d399] transition-colors">
             <Plus className="h-3 w-3" /> Add variable
           </button>
         </div>
         <button
           onClick={send}
           disabled={loading || !slug || !apiKey}
-          className="rounded-md bg-[#7F77DD] px-5 py-2 text-sm font-medium text-white hover:bg-[#6e66cc] disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+          className="rounded-md bg-[#10b981] px-5 py-2 text-sm font-medium text-white hover:bg-[#059669] disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
         >
           {loading && <Loader2 className="h-4 w-4 animate-spin" />}
           Send request
@@ -325,6 +326,7 @@ function ApiTester() {
 export default function Docs() {
   const [activeId, setActiveId] = useState("quick-start");
   const [docsSidebarOpen, setDocsSidebarOpen] = useState(false);
+  const { theme, toggle } = useTheme();
   const contentRef = useRef<HTMLDivElement>(null);
 
   // Intersection observer for active nav
@@ -384,7 +386,7 @@ export default function Docs() {
                   onClick={() => { scrollTo(item.id); setDocsSidebarOpen(false); }}
                   className={`block w-full text-left px-3 py-1.5 rounded-md text-sm transition-colors mb-0.5 ${
                     activeId === item.id
-                      ? "text-[#7F77DD] border-l-2 border-[#7F77DD] bg-[#7F77DD]/5"
+                      ? "text-[#10b981] border-l-2 border-[#10b981] bg-[#10b981]/5"
                       : "text-zinc-500 hover:text-zinc-300"
                   }`}
                 >
@@ -393,6 +395,10 @@ export default function Docs() {
               ))}
             </div>
           ))}
+          <button onClick={toggle} className="flex items-center gap-2 mt-4 text-xs text-zinc-500 hover:text-zinc-300 transition-colors">
+            {theme === "dark" ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
+            {theme === "dark" ? "Light mode" : "Dark mode"}
+          </button>
         </div>
       </aside>
 
@@ -407,20 +413,20 @@ export default function Docs() {
           <div className="space-y-8">
             <div>
               <h3 className="text-lg font-semibold flex items-center gap-2">
-                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#7F77DD] text-xs text-white font-bold">1</span>
+                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#10b981] text-xs text-white font-bold">1</span>
                 Create an account
               </h3>
               <p className="text-zinc-600 mt-2">
-                Sign up at <Link to="/signup" className="text-[#7F77DD] underline hover:text-[#6e66cc] transition-colors">versera.dev/signup</Link>. You'll get 1,000 free credits — no credit card needed.
+                Sign up at <Link to="/signup" className="text-[#10b981] underline hover:text-[#059669] transition-colors">versera.dev/signup</Link>. You'll get 1,000 free credits — no credit card needed.
               </p>
-              <Link to="/signup" className="inline-block mt-3 rounded-md bg-[#7F77DD] px-4 py-2 text-sm font-medium text-white hover:bg-[#6e66cc] transition-colors">
+              <Link to="/signup" className="inline-block mt-3 rounded-md bg-[#10b981] px-4 py-2 text-sm font-medium text-white hover:bg-[#059669] transition-colors">
                 Create account →
               </Link>
             </div>
 
             <div>
               <h3 className="text-lg font-semibold flex items-center gap-2">
-                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#7F77DD] text-xs text-white font-bold">2</span>
+                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#10b981] text-xs text-white font-bold">2</span>
                 Get your API key
               </h3>
               <p className="text-zinc-600 mt-2">
@@ -431,7 +437,7 @@ export default function Docs() {
 
             <div>
               <h3 className="text-lg font-semibold flex items-center gap-2">
-                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#7F77DD] text-xs text-white font-bold">3</span>
+                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#10b981] text-xs text-white font-bold">3</span>
                 Make your first resolve call
               </h3>
               <p className="text-zinc-600 mt-2">
@@ -785,7 +791,7 @@ curl https://api.versera.dev/v1/prompts \\
           <div className="flex items-center justify-center gap-3 my-8 flex-wrap">
             {["dev", "staging", "prod"].map((env, i) => (
               <div key={env} className="flex items-center gap-3">
-                <div className="rounded-lg bg-[#7F77DD]/10 border border-[#7F77DD]/30 px-5 py-3 text-sm font-semibold text-[#7F77DD]">
+                <div className="rounded-lg bg-[#10b981]/10 border border-[#10b981]/30 px-5 py-3 text-sm font-semibold text-[#10b981]">
                   {env}
                 </div>
                 {i < 2 && (

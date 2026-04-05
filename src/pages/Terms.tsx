@@ -46,27 +46,27 @@ const sections = [
 
 export default function Terms() {
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white font-sans antialiased">
+    <div className="min-h-screen bg-background text-foreground font-sans antialiased">
       <div className="mx-auto max-w-[760px] px-5 py-16">
         <Link
           to="/"
-          className="inline-flex items-center gap-1.5 text-sm text-zinc-400 hover:text-white transition-colors mb-10"
+          className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-10"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to home
         </Link>
 
         <h1 className="text-3xl font-bold mb-2">Terms of Service</h1>
-        <p className="text-sm text-zinc-500 mb-12">Last updated: April 5, 2026</p>
+        <p className="text-sm text-muted-foreground mb-12">Last updated: April 5, 2026</p>
 
         <div className="space-y-10">
           {sections.map((s, i) => (
             <div key={i}>
               <h2 className="text-lg font-semibold mb-3 flex items-center gap-3">
-                <span className="text-[#7F77DD] font-bold">{i + 1}.</span>
+                <span className="text-primary font-bold">{i + 1}.</span>
                 {s.title}
               </h2>
-              <p className="text-sm text-zinc-400 leading-[1.8]">{s.body}</p>
+              <p className="text-sm text-muted-foreground leading-[1.8]">{s.body}</p>
             </div>
           ))}
         </div>

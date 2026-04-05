@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -37,13 +37,13 @@ export default function Login() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#0a0a0a] p-4">
+    <div className="flex min-h-screen items-center justify-center bg-background p-4">
       <Card className="w-full max-w-sm border shadow-sm">
         <CardContent className="pt-8 pb-6 px-6">
           <div className="mb-8 text-center">
-            <span className="text-2xl font-bold tracking-tight text-primary">
+            <Link to="/" className="text-2xl font-bold tracking-tight text-primary hover:opacity-80 transition-opacity">
               Versera
-            </span>
+            </Link>
           </div>
 
           <form onSubmit={handleSignIn} className="space-y-4">
@@ -81,12 +81,12 @@ export default function Login() {
 
           <p className="mt-6 text-center text-sm text-muted-foreground">
             Don't have an account?{" "}
-            <a
-              href="/signup"
+            <Link
+              to="/signup"
               className="font-medium text-primary hover:underline"
             >
               Sign up
-            </a>
+            </Link>
           </p>
         </CardContent>
       </Card>

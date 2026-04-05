@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Outlet, NavLink, Link, Navigate } from "react-router-dom";
-import { BarChart3, Users, DollarSign, ArrowLeft, LogOut, MessageSquare, Menu, X } from "lucide-react";
+import { BarChart3, Users, DollarSign, ArrowLeft, LogOut, MessageSquare, Menu, X, Sun, Moon } from "lucide-react";
 import { useMe } from "@/hooks/useAuth";
 import { getUser, logout } from "@/lib/auth";
+import { useTheme } from "@/components/ThemeToggle";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const adminNav = [
@@ -16,8 +17,8 @@ export default function AdminLayout() {
   const { data: user, isLoading } = useMe();
   const cached = getUser();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { theme, toggle } = useTheme();
 
-  // Wait for user data before deciding
   if (isLoading && !cached) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
@@ -28,7 +29,6 @@ export default function AdminLayout() {
 
   const currentUser = user ?? cached;
 
-  // Redirect non-admins
   if (currentUser && !(currentUser as any).isAdmin) {
     return <Navigate to="/dashboard" replace />;
   }
@@ -36,7 +36,7 @@ export default function AdminLayout() {
   const sidebarContent = (
     <>
       <div className="px-5 py-5">
-        <span className="text-xl font-bold tracking-tight" style={{ color: "#E24B4A" }}>
+        <span className="text-xl font-bold tracking-tight text-[#ef4444]">
           Versera Admin
         </span>
       </div>
@@ -51,7 +51,7 @@ export default function AdminLayout() {
             className={({ isActive }) =>
               `flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
                 isActive
-                  ? "bg-white/[0.08] text-white"
+                  ? "bg-[#10b981]/[0.08] text-[#10b981]"
                   : "text-white/60 hover:bg-white/[0.04] hover:text-white/80"
               }`
             }
@@ -63,6 +63,14 @@ export default function AdminLayout() {
       </nav>
 
       <div className="border-t border-white/[0.06] px-4 py-4 space-y-3">
+        <button
+          onClick={toggle}
+          className="flex items-center gap-2 text-xs text-white/40 hover:text-white/70 transition-colors"
+        >
+          {theme === "dark" ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
+          {theme === "dark" ? "Light mode" : "Dark mode"}
+        </button>
+
         <Link
           to="/dashboard"
           className="flex items-center gap-2 text-xs text-white/40 hover:text-white/70 transition-colors"
@@ -93,20 +101,17 @@ export default function AdminLayout() {
 
   return (
     <div className="flex min-h-screen w-full">
-      {/* Mobile header */}
       <header className="fixed top-0 inset-x-0 z-50 flex h-12 items-center gap-3 border-b border-white/[0.06] px-4 md:hidden" style={{ backgroundColor: "#080808" }}>
         <button onClick={() => setSidebarOpen((v) => !v)} className="text-white/60 hover:text-white">
           {sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
-        <span className="text-sm font-bold" style={{ color: "#E24B4A" }}>Versera Admin</span>
+        <span className="text-sm font-bold text-[#ef4444]">Versera Admin</span>
       </header>
 
-      {/* Overlay */}
       {sidebarOpen && (
         <div className="fixed inset-0 z-40 bg-black/50 md:hidden" onClick={() => setSidebarOpen(false)} />
       )}
 
-      {/* Sidebar - desktop always visible, mobile as overlay */}
       <aside
         className={`fixed top-0 bottom-0 left-0 z-50 flex w-60 flex-col border-r border-white/[0.06] transition-transform duration-200 md:relative md:translate-x-0 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
@@ -116,7 +121,6 @@ export default function AdminLayout() {
         {sidebarContent}
       </aside>
 
-      {/* Main content */}
       <main className="flex-1 overflow-auto p-4 pt-16 md:p-8 md:pt-8 lg:p-10">
         <Outlet />
       </main>

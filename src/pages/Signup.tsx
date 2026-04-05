@@ -37,7 +37,7 @@ export default function Signup() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#0a0a0a] p-4">
+    <div className="flex min-h-screen items-center justify-center bg-background p-4">
       <Card className="w-full max-w-sm border shadow-sm">
         <CardContent className="pt-8 pb-6 px-6">
           <div className="mb-8 text-center">

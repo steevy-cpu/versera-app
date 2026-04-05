@@ -18,7 +18,7 @@ function HighlightedTemplate({ text }: { text: string }) {
     <pre className="whitespace-pre-wrap font-mono text-sm leading-relaxed text-editor-foreground">
       {parts.map((part, i) =>
         part.startsWith("{{") ? (
-          <span key={i} className="text-amber font-medium">{part}</span>
+          <span key={i} className="text-primary font-medium">{part}</span>
         ) : (
           <span key={i}>{part}</span>
         )
@@ -181,7 +181,7 @@ export default function PromptEditor() {
                   <Badge
                     key={v}
                     variant="secondary"
-                    className="bg-amber/15 text-amber border-0 font-mono text-xs"
+                    className="bg-primary/10 text-primary border-primary/20 border font-mono text-xs"
                   >
                     {v}
                   </Badge>
