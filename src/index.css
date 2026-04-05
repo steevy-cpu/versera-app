@@ -54,6 +54,9 @@
 
     --editor-bg: 220 14% 96%;
     --editor-foreground: 220 13% 9%;
+
+    --tertiary-foreground: 220 9% 64%;
+    --strong-border: 220 13% 83%;
   }
 
   .dark {
@@ -102,6 +105,9 @@
 
     --editor-bg: 0 0% 7%;
     --editor-foreground: 210 20% 98%;
+
+    --tertiary-foreground: 220 9% 46%;
+    --strong-border: 217 19% 27%;
   }
 }
 
