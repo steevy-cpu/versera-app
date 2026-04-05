@@ -153,9 +153,9 @@ export default function Landing() {
             Versera
           </Link>
           <div className="flex items-center gap-5 text-sm">
-            <a href="#" className="hidden sm:inline text-zinc-400 hover:text-white transition-colors">
+            <Link to="/docs" className="hidden sm:inline text-zinc-400 hover:text-white transition-colors">
               Documentation
-            </a>
+            </Link>
             <Link to="/login" className="text-zinc-400 hover:text-white transition-colors">
               Sign in
             </Link>
@@ -206,12 +206,12 @@ export default function Landing() {
           >
             Start for free
           </Link>
-          <a
-            href="#"
+          <Link
+            to="/docs"
             className="rounded-lg border border-white/10 px-6 py-2.5 text-sm font-semibold text-zinc-300 hover:border-white/20 hover:text-white transition-colors"
           >
             View docs
-          </a>
+          </Link>
         </motion.div>
 
         <motion.p variants={fadeUp} className="mt-5 text-xs text-zinc-500">
@@ -493,7 +493,7 @@ export default function Landing() {
               Company
             </h4>
             <ul className="space-y-2 text-sm text-zinc-400">
-              <li><a href="#" className="hover:text-white transition-colors">Documentation</a></li>
+              <li><Link to="/docs" className="hover:text-white transition-colors">Documentation</Link></li>
               <li><a href="#" className="hover:text-white transition-colors">GitHub</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Twitter / X</a></li>
             </ul>
