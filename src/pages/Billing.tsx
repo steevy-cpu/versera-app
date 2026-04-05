@@ -1,7 +1,10 @@
+import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
   Table,
   TableBody,
@@ -11,9 +14,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { formatDistanceToNow } from "date-fns";
+import { CheckCircle2, Info, Loader2 } from "lucide-react";
 import { useMe, useUsage } from "@/hooks/useAuth";
 import { usePlans, useTransactions, useCheckout } from "@/hooks/useBilling";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 
 export default function Billing() {
   const { toast } = useToast();
