@@ -67,6 +67,14 @@ const App = () => (
               <Route path="/billing" element={<Billing />} />
               <Route path="/settings" element={<Settings />} />
             </Route>
+
+            {/* Admin routes — AdminLayout handles its own isAdmin check */}
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<AdminOverview />} />
+              <Route path="users" element={<AdminUsers />} />
+              <Route path="users/:id" element={<AdminUserDetail />} />
+              <Route path="revenue" element={<AdminRevenue />} />
+            </Route>
           </Route>
 
           <Route path="*" element={<NotFound />} />
