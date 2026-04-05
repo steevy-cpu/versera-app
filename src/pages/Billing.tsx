@@ -20,12 +20,22 @@ import { usePlans, useTransactions, useCheckout } from "@/hooks/useBilling";
 import { toast } from "sonner";
 
 export default function Billing() {
-  const { toast } = useToast();
-  const { data: user, isLoading: userLoading } = useMe();
+  const [searchParams] = useSearchParams();
+  const [buyingPlan, setBuyingPlan] = useState<string | null>(null);
+  const { data: user, isLoading: userLoading, refetch: refetchUser } = useMe();
   const { data: usage, isLoading: usageLoading } = useUsage();
   const { data: plans, isLoading: plansLoading } = usePlans();
-  const { data: transactions, isLoading: txLoading } = useTransactions();
-  const { mutate: checkout, isPending: isCheckingOut } = useCheckout();
+  const { data: transactions, isLoading: txLoading, refetch: refetchTx } = useTransactions();
+  const { mutate: checkout } = useCheckout();
+
+  const isSuccess = searchParams.get("success") === "true";
+  const isCancelled = searchParams.get("cancelled") === "true";
+
+  // Refresh data when returning from successful checkout
+  if (isSuccess) {
+    refetchUser();
+    refetchTx();
+  }
 
   const usagePercent =
     user ? (user.credits / Math.max(user.totalCredits, 1)) * 100 : 0;
@@ -37,16 +47,19 @@ export default function Billing() {
   ];
 
   const handleBuy = (planKey: string) => {
+    setBuyingPlan(planKey);
     checkout(planKey, {
       onSuccess: (data) => {
-        toast({ title: data.message });
+        if (data.checkoutUrl) {
+          window.location.href = data.checkoutUrl;
+        }
       },
-      onError: (err) =>
-        toast({
-          title: "Checkout failed",
+      onError: (err) => {
+        setBuyingPlan(null);
+        toast.error("Checkout failed", {
           description: (err as { message: string }).message,
-          variant: "destructive",
-        }),
+        });
+      },
     });
   };
 
