@@ -24,9 +24,9 @@ export default function AdminTestimonials() {
     setLoading((p) => ({ ...p, [id]: true }));
     try {
       if (type === "delete") {
-        await api.delete(`/v1/admin/testimonials/${id}`);
+        await api.delete(`/v1/testimonials/admin/${id}`);
       } else {
-        await api.put(`/v1/admin/testimonials/${id}/${type}`);
+        await api.put(`/v1/testimonials/admin/${id}/${type}`);
       }
       qc.invalidateQueries({ queryKey: ["admin", "testimonials"] });
       qc.invalidateQueries({ queryKey: ["testimonials"] });
