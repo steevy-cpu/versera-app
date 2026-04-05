@@ -175,7 +175,7 @@ export default function Billing() {
       {/* Transaction History */}
       <div>
         <h2 className="mb-4 text-lg font-semibold">Transaction History</h2>
-        <Card className="shadow-none overflow-hidden">
+        <Card className="shadow-none overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow className="hover:bg-transparent">

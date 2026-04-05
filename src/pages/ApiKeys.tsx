@@ -98,7 +98,7 @@ export default function ApiKeys() {
                     )}
                   </div>
 
-                  <div className="flex gap-6 text-sm text-muted-foreground">
+                  <div className="flex flex-wrap gap-x-6 gap-y-1 text-sm text-muted-foreground">
                     <span>
                       Created:{" "}
                       {formatDistanceToNow(new Date(key.createdAt), { addSuffix: true })}
@@ -127,15 +127,15 @@ export default function ApiKeys() {
         </div>
       )}
 
-      <div className="flex gap-2 items-center">
+      <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
         <Input
           placeholder="Key name (e.g. Production Key)"
           value={newKeyName}
           onChange={(e) => setNewKeyName(e.target.value)}
-          className="max-w-xs"
+          className="sm:max-w-xs"
           onKeyDown={(e) => e.key === "Enter" && handleGenerate()}
         />
-        <Button variant="outline" onClick={handleGenerate} disabled={isCreating}>
+        <Button variant="outline" onClick={handleGenerate} disabled={isCreating} className="w-full sm:w-auto">
           {isCreating ? "Generating…" : "Generate New Key"}
         </Button>
       </div>
