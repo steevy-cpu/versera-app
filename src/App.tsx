@@ -13,6 +13,7 @@ import PromptEditor from "@/pages/PromptEditor";
 import Versions from "@/pages/Versions";
 import ApiKeys from "@/pages/ApiKeys";
 import Billing from "@/pages/Billing";
+import Docs from "@/pages/Docs";
 import NotFound from "@/pages/NotFound";
 import { isAuthenticated } from "@/lib/auth";
 
@@ -31,6 +32,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Landing />} />
+          <Route path="/docs" element={<Docs />} />
 
           {/* Redirect logged-in users away from /login */}
           <Route
