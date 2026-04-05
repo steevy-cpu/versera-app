@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Copy, Check, Plus, X, Loader2, Menu } from "lucide-react";
+import { ArrowLeft, Copy, Check, Plus, X, Loader2, Menu, Sun, Moon } from "lucide-react";
+import { useTheme } from "@/components/ThemeToggle";
 
 const API_BASE =
   (import.meta.env.VITE_API_URL as string | undefined) ??
@@ -325,6 +326,7 @@ function ApiTester() {
 export default function Docs() {
   const [activeId, setActiveId] = useState("quick-start");
   const [docsSidebarOpen, setDocsSidebarOpen] = useState(false);
+  const { theme, toggle } = useTheme();
   const contentRef = useRef<HTMLDivElement>(null);
 
   // Intersection observer for active nav
@@ -393,6 +395,10 @@ export default function Docs() {
               ))}
             </div>
           ))}
+          <button onClick={toggle} className="flex items-center gap-2 mt-4 text-xs text-zinc-500 hover:text-zinc-300 transition-colors">
+            {theme === "dark" ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
+            {theme === "dark" ? "Light mode" : "Dark mode"}
+          </button>
         </div>
       </aside>
 
