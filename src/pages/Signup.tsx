@@ -41,9 +41,9 @@ export default function Signup() {
       <Card className="w-full max-w-sm border shadow-sm">
         <CardContent className="pt-8 pb-6 px-6">
           <div className="mb-8 text-center">
-            <span className="text-2xl font-bold tracking-tight text-primary">
+            <Link to="/" className="text-2xl font-bold tracking-tight text-primary hover:opacity-80 transition-opacity">
               Versera
-            </span>
+            </Link>
           </div>
 
           <form onSubmit={handleSignup} className="space-y-4">
