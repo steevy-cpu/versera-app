@@ -154,10 +154,14 @@ export default function Billing() {
                   <Button
                     variant={plan.featured ? "default" : "outline"}
                     className="w-full"
-                    disabled={isCheckingOut}
+                    disabled={buyingPlan !== null}
                     onClick={() => handleBuy(plan.key)}
                   >
-                    Buy
+                    {buyingPlan === plan.key ? (
+                      <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Processing…</>
+                    ) : (
+                      "Buy"
+                    )}
                   </Button>
                 </CardContent>
               </Card>
