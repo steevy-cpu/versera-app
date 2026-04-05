@@ -13,6 +13,7 @@ import PromptEditor from "@/pages/PromptEditor";
 import Versions from "@/pages/Versions";
 import ApiKeys from "@/pages/ApiKeys";
 import Billing from "@/pages/Billing";
+import Settings from "@/pages/Settings";
 import Docs from "@/pages/Docs";
 import Terms from "@/pages/Terms";
 import Privacy from "@/pages/Privacy";
@@ -59,6 +60,7 @@ const App = () => (
               <Route path="/prompts/:id/versions" element={<Versions />} />
               <Route path="/api-keys" element={<ApiKeys />} />
               <Route path="/billing" element={<Billing />} />
+              <Route path="/settings" element={<Settings />} />
             </Route>
           </Route>
 

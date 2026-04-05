@@ -1,4 +1,4 @@
-import { LayoutDashboard, FileText, Key, CreditCard, Settings, LogOut } from "lucide-react";
+import { LayoutDashboard, FileText, Key, CreditCard, Settings as SettingsIcon, LogOut } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
 import { useMe } from "@/hooks/useAuth";
@@ -19,6 +19,7 @@ const navItems = [
   { title: "Prompts", url: "/prompts", icon: FileText },
   { title: "API Keys", url: "/api-keys", icon: Key },
   { title: "Billing", url: "/billing", icon: CreditCard },
+  { title: "Settings", url: "/settings", icon: SettingsIcon },
 ];
 
 export function AppSidebar() {

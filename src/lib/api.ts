@@ -43,5 +43,6 @@ export const api = {
     request<T>("POST", path, body),
   put: <T>(path: string, body?: unknown): Promise<T> =>
     request<T>("PUT", path, body),
-  delete: <T>(path: string): Promise<T> => request<T>("DELETE", path),
+  delete: <T>(path: string, body?: unknown): Promise<T> =>
+    request<T>("DELETE", path, body),
 };
