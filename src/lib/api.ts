@@ -3,7 +3,7 @@ import type { ApiError } from "./types";
 
 const BASE_URL =
   (import.meta.env.VITE_API_URL as string | undefined) ??
-  "https://versera-app-production.up.railway.app";
+  "https://api.versera.dev";
 
 async function request<T>(
   method: string,

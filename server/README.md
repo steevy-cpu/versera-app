@@ -1,6 +1,6 @@
 # Versera API
 
-**Production API:** https://versera-app-production.up.railway.app
+**Production API:** https://api.versera.dev
 
 The backend for Versera — a prompt version control API for developers building on LLMs.
 
@@ -41,7 +41,7 @@ npm run db:migrate    # apply migrations to the database
 ### 4. Start the dev server
 
 ```bash
-npm run dev           # ts-node-dev with hot reload on https://versera-app-production.up.railway.app
+npm run dev           # ts-node-dev with hot reload on https://api.versera.dev
 ```
 
 ---
@@ -65,7 +65,7 @@ npm run dev           # ts-node-dev with hot reload on https://versera-app-produ
 All authenticated endpoints require an `Authorization: Bearer <token>` header unless noted.  
 The resolve endpoint uses `x-api-key: <key>` instead.
 
-Base URL: `https://versera-app-production.up.railway.app`
+Base URL: `https://api.versera.dev`
 
 ---
 
@@ -74,7 +74,7 @@ Base URL: `https://versera-app-production.up.railway.app`
 #### Register a new account
 
 ```bash
-curl -X POST https://versera-app-production.up.railway.app/auth/register \
+curl -X POST https://api.versera.dev/auth/register \
   -H "Content-Type: application/json" \
   -d '{
     "name": "Alex",
@@ -102,7 +102,7 @@ curl -X POST https://versera-app-production.up.railway.app/auth/register \
 #### Login
 
 ```bash
-curl -X POST https://versera-app-production.up.railway.app/auth/login \
+curl -X POST https://api.versera.dev/auth/login \
   -H "Content-Type: application/json" \
   -d '{
     "email": "alex@versera.dev",
@@ -125,14 +125,14 @@ curl -X POST https://versera-app-production.up.railway.app/auth/login \
 #### Get profile
 
 ```bash
-curl https://versera-app-production.up.railway.app/v1/me \
+curl https://api.versera.dev/v1/me \
   -H "Authorization: Bearer <token>"
 ```
 
 #### Dashboard stats
 
 ```bash
-curl https://versera-app-production.up.railway.app/v1/me/stats \
+curl https://api.versera.dev/v1/me/stats \
   -H "Authorization: Bearer <token>"
 ```
 
@@ -148,7 +148,7 @@ curl https://versera-app-production.up.railway.app/v1/me/stats \
 #### Monthly usage
 
 ```bash
-curl https://versera-app-production.up.railway.app/v1/me/usage \
+curl https://api.versera.dev/v1/me/usage \
   -H "Authorization: Bearer <token>"
 ```
 
@@ -160,18 +160,18 @@ curl https://versera-app-production.up.railway.app/v1/me/usage \
 
 ```bash
 # All prompts
-curl https://versera-app-production.up.railway.app/v1/prompts \
+curl https://api.versera.dev/v1/prompts \
   -H "Authorization: Bearer <token>"
 
 # Filtered
-curl "https://versera-app-production.up.railway.app/v1/prompts?environment=prod&search=summarize" \
+curl "https://api.versera.dev/v1/prompts?environment=prod&search=summarize" \
   -H "Authorization: Bearer <token>"
 ```
 
 #### Create a prompt
 
 ```bash
-curl -X POST https://versera-app-production.up.railway.app/v1/prompts \
+curl -X POST https://api.versera.dev/v1/prompts \
   -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \
   -d '{
@@ -197,14 +197,14 @@ curl -X POST https://versera-app-production.up.railway.app/v1/prompts \
 #### Get a prompt (with all versions)
 
 ```bash
-curl https://versera-app-production.up.railway.app/v1/prompts/summarize-doc \
+curl https://api.versera.dev/v1/prompts/summarize-doc \
   -H "Authorization: Bearer <token>"
 ```
 
 #### Update a prompt
 
 ```bash
-curl -X PUT https://versera-app-production.up.railway.app/v1/prompts/summarize-doc \
+curl -X PUT https://api.versera.dev/v1/prompts/summarize-doc \
   -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \
   -d '{ "status": "ACTIVE", "environment": "prod" }'
@@ -213,7 +213,7 @@ curl -X PUT https://versera-app-production.up.railway.app/v1/prompts/summarize-d
 #### Delete a prompt (soft delete)
 
 ```bash
-curl -X DELETE https://versera-app-production.up.railway.app/v1/prompts/summarize-doc \
+curl -X DELETE https://api.versera.dev/v1/prompts/summarize-doc \
   -H "Authorization: Bearer <token>"
 # 204 No Content
 ```
@@ -225,14 +225,14 @@ curl -X DELETE https://versera-app-production.up.railway.app/v1/prompts/summariz
 #### List version history
 
 ```bash
-curl https://versera-app-production.up.railway.app/v1/prompts/summarize-doc/versions \
+curl https://api.versera.dev/v1/prompts/summarize-doc/versions \
   -H "Authorization: Bearer <token>"
 ```
 
 #### Save a new version
 
 ```bash
-curl -X POST https://versera-app-production.up.railway.app/v1/prompts/summarize-doc/versions \
+curl -X POST https://api.versera.dev/v1/prompts/summarize-doc/versions \
   -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \
   -d '{
@@ -244,7 +244,7 @@ curl -X POST https://versera-app-production.up.railway.app/v1/prompts/summarize-
 #### Rollback to a previous version
 
 ```bash
-curl -X POST https://versera-app-production.up.railway.app/v1/prompts/summarize-doc/versions/2/rollback \
+curl -X POST https://api.versera.dev/v1/prompts/summarize-doc/versions/2/rollback \
   -H "Authorization: Bearer <token>"
 ```
 
@@ -255,14 +255,14 @@ curl -X POST https://versera-app-production.up.railway.app/v1/prompts/summarize-
 #### List keys
 
 ```bash
-curl https://versera-app-production.up.railway.app/v1/api-keys \
+curl https://api.versera.dev/v1/api-keys \
   -H "Authorization: Bearer <token>"
 ```
 
 #### Generate a new key
 
 ```bash
-curl -X POST https://versera-app-production.up.railway.app/v1/api-keys \
+curl -X POST https://api.versera.dev/v1/api-keys \
   -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \
   -d '{ "name": "Production Key" }'
@@ -281,7 +281,7 @@ curl -X POST https://versera-app-production.up.railway.app/v1/api-keys \
 #### Revoke a key
 
 ```bash
-curl -X DELETE https://versera-app-production.up.railway.app/v1/api-keys/<key-id> \
+curl -X DELETE https://api.versera.dev/v1/api-keys/<key-id> \
   -H "Authorization: Bearer <token>"
 # 204 No Content
 ```
@@ -296,7 +296,7 @@ Auth uses `x-api-key` header. Each call deducts **1 credit**.
 #### Resolve a prompt with variable injection
 
 ```bash
-curl "https://versera-app-production.up.railway.app/v1/resolve/summarize-doc?tone=professional&focus_areas=key%20metrics&max_words=200&document=..." \
+curl "https://api.versera.dev/v1/resolve/summarize-doc?tone=professional&focus_areas=key%20metrics&max_words=200&document=..." \
   -H "x-api-key: vrs_live_a1b2c3d4e5f6..."
 ```
 
@@ -321,20 +321,20 @@ Variables not supplied in query params are returned **unreplaced** (`{{variable}
 #### List plans (public — no auth)
 
 ```bash
-curl https://versera-app-production.up.railway.app/v1/billing/plans
+curl https://api.versera.dev/v1/billing/plans
 ```
 
 #### Transaction history
 
 ```bash
-curl https://versera-app-production.up.railway.app/v1/billing/transactions \
+curl https://api.versera.dev/v1/billing/transactions \
   -H "Authorization: Bearer <token>"
 ```
 
 #### Create checkout session (scaffold)
 
 ```bash
-curl -X POST https://versera-app-production.up.railway.app/v1/billing/checkout \
+curl -X POST https://api.versera.dev/v1/billing/checkout \
   -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \
   -d '{ "plan": "growth" }'
