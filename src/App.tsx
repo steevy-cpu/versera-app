@@ -19,6 +19,11 @@ import Terms from "@/pages/Terms";
 import Privacy from "@/pages/Privacy";
 import CookiesPage from "@/pages/CookiesPage";
 import NotFound from "@/pages/NotFound";
+import AdminLayout from "@/components/AdminLayout";
+import AdminOverview from "@/pages/admin/AdminOverview";
+import AdminUsers from "@/pages/admin/AdminUsers";
+import AdminUserDetail from "@/pages/admin/AdminUserDetail";
+import AdminRevenue from "@/pages/admin/AdminRevenue";
 import { isAuthenticated } from "@/lib/auth";
 
 const queryClient = new QueryClient();
