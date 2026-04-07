@@ -18,6 +18,7 @@ const NAV = [
       { title: "Quick start", id: "quick-start" },
       { title: "Authentication", id: "authentication" },
       { title: "Credits & limits", id: "credits-limits" },
+      { title: "Node.js SDK", id: "nodejs-sdk" },
     ],
   },
   {
@@ -36,6 +37,15 @@ const NAV = [
     items: [
       { title: "API keys", id: "api-keys" },
       { title: "Billing", id: "billing" },
+      { title: "Change password", id: "change-password" },
+      { title: "Delete account", id: "delete-account" },
+    ],
+  },
+  {
+    label: "COMMUNITY",
+    items: [
+      { title: "Submit testimonial", id: "submit-testimonial" },
+      { title: "View testimonials", id: "view-testimonials" },
     ],
   },
   {
@@ -108,11 +118,12 @@ function TabbedCode({ tabs }: { tabs: { label: string; code: string }[] }) {
   );
 }
 
-function MethodBadge({ method }: { method: "GET" | "POST" | "DELETE" }) {
+function MethodBadge({ method }: { method: "GET" | "POST" | "DELETE" | "PUT" }) {
   const colors = {
     GET: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30",
     POST: "bg-blue-500/15 text-blue-400 border-blue-500/30",
     DELETE: "bg-red-500/15 text-red-400 border-red-500/30",
+    PUT: "bg-amber-500/15 text-amber-400 border-amber-500/30",
   };
   return (
     <span className={`inline-block rounded-full border px-2.5 py-0.5 text-xs font-semibold font-mono ${colors[method]}`}>
@@ -121,7 +132,7 @@ function MethodBadge({ method }: { method: "GET" | "POST" | "DELETE" }) {
   );
 }
 
-function EndpointBadge({ method, path }: { method: "GET" | "POST" | "DELETE"; path: string }) {
+function EndpointBadge({ method, path }: { method: "GET" | "POST" | "DELETE" | "PUT"; path: string }) {
   return (
     <div className="flex items-center gap-2 mt-2 mb-4">
       <MethodBadge method={method} />
@@ -467,6 +478,10 @@ export default function Docs() {
 const { template } = await response.json()`,
                     },
                     {
+                      label: "Node.js SDK",
+                      code: `npm install versera-app`,
+                    },
+                    {
                       label: "Python",
                       code: `import requests
 
@@ -479,6 +494,29 @@ template = response.json()['template']`,
                     },
                   ]}
                 />
+              </div>
+              {/* SDK usage shown when Node.js SDK tab concept — full example below install */}
+              <div className="mt-3">
+                <CodeBlock code={`import { Versera } from 'versera-app'
+
+const versera = new Versera({
+  apiKey: process.env.VERSERA_API_KEY
+})
+
+// Resolve your prompt
+const { template } = await versera.resolve(
+  'summarize-doc',
+  {
+    tone: 'professional',
+    document: userDocument
+  }
+)
+
+// Pass to any LLM
+const response = await anthropic.messages.create({
+  model: 'claude-sonnet-4-6',
+  messages: [{ role: 'user', content: template }]
+})`} className="hidden" />
               </div>
             </div>
           </div>
@@ -525,6 +563,9 @@ curl https://api.versera.dev/v1/prompts \\
                   ["Analytics report", "5 credits", "Per generation"],
                   ["Push/update prompt", "Free", "No credit cost"],
                   ["List/read prompts", "Free", "No credit cost"],
+                  ["Save new version", "Free", "No credit cost"],
+                  ["Rollback version", "Free", "No credit cost"],
+                  ["Generate API key", "Free", "No credit cost"],
                 ].map(([action, credits, notes]) => (
                   <tr key={action} className="border-b last:border-0">
                     <td className="px-4 py-2 text-zinc-800">{action}</td>
@@ -536,6 +577,88 @@ curl https://api.versera.dev/v1/prompts \\
             </table>
           </div>
           <p className="text-zinc-600">Credits never expire. Purchase more at any time from your billing dashboard.</p>
+
+          {/* ── NODE.JS SDK ── */}
+          <SectionHeading id="nodejs-sdk">Node.js SDK</SectionHeading>
+          <p className="text-zinc-500 mb-4">The official JavaScript and TypeScript SDK for Versera</p>
+
+          <div className="flex items-center gap-3 mb-3">
+            <CodeBlock code="npm install versera-app" className="flex-1" />
+          </div>
+          <a
+            href="https://www.npmjs.com/package/versera-app"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-sm text-[#10b981] hover:text-[#059669] transition-colors"
+          >
+            View on npm →
+          </a>
+
+          <h3 className="text-lg font-semibold mt-8 mb-2">Quick start</h3>
+          <CodeBlock code={`import { Versera } from 'versera-app'
+
+const versera = new Versera({
+  apiKey: process.env.VERSERA_API_KEY
+})
+
+const { template } = await versera.resolve(
+  'my-prompt',
+  { variable: 'value' }
+)`} />
+
+          <h3 className="text-lg font-semibold mt-8 mb-2">Methods</h3>
+          <div className="overflow-x-auto rounded-lg border border-zinc-200 my-4">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b bg-zinc-50 text-left text-xs text-zinc-500">
+                  <th className="px-4 py-2 font-medium">Method</th>
+                  <th className="px-4 py-2 font-medium">Description</th>
+                  <th className="px-4 py-2 font-medium">Credits</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  ["resolve(slug, vars?, opts?)", "Resolve a prompt with variables", "1 credit"],
+                  ["push(input)", "Create or update a prompt", "Free"],
+                  ["list(options?)", "List all prompts", "Free"],
+                  ["get(slug)", "Get a prompt with history", "Free"],
+                  ["saveVersion(slug, input)", "Save a new version", "Free"],
+                  ["rollback(slug, version)", "Rollback to previous version", "Free"],
+                  ["log(input)", "Log quality score for A/B testing", "Free"],
+                ].map(([method, desc, credits]) => (
+                  <tr key={method} className="border-b last:border-0">
+                    <td className="px-4 py-2 font-mono text-xs font-medium">{method}</td>
+                    <td className="px-4 py-2 text-xs text-zinc-600">{desc}</td>
+                    <td className="px-4 py-2 text-xs text-zinc-500">{credits}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <h3 className="text-lg font-semibold mt-8 mb-2">Error handling</h3>
+          <CodeBlock code={`import { Versera, VerseraError } from 'versera-app'
+
+try {
+  const { template } = await versera.resolve(
+    'my-prompt'
+  )
+} catch (error) {
+  if (error instanceof VerseraError) {
+    console.log(error.status)   // HTTP status
+    console.log(error.message)  // Error message
+
+    if (error.status === 402) {
+      // Out of credits — redirect to billing
+    }
+    if (error.status === 404) {
+      // Prompt not found
+    }
+    if (error.status === 401) {
+      // Invalid or missing API key
+    }
+  }
+}`} />
 
           {/* ── RESOLVE A PROMPT ── */}
           <SectionHeading id="resolve">Resolve a prompt</SectionHeading>
@@ -749,6 +872,115 @@ curl https://api.versera.dev/v1/prompts \\
           <CodeBlock code={`curl https://api.versera.dev/v1/billing/transactions \\
   -H "Authorization: Bearer YOUR_TOKEN"`} />
 
+          {/* ── CHANGE PASSWORD ── */}
+          <SectionHeading id="change-password">Change password</SectionHeading>
+          <EndpointBadge method="PUT" path="/v1/me/password" />
+          <p className="text-sm text-zinc-500 mb-1"><strong>Authentication:</strong> Bearer JWT</p>
+          <p className="text-zinc-600 mb-4">Update your account password. Requires your current password for verification.</p>
+
+          <h4 className="font-semibold mb-2">Request body</h4>
+          <BodyTable params={[
+            { name: "currentPassword", type: "string", required: "required", desc: "Your current password" },
+            { name: "newPassword", type: "string", required: "required", desc: "New password (min 8 chars)" },
+          ]} />
+
+          <h4 className="font-semibold mt-4 mb-2">Example request</h4>
+          <CodeBlock code={`curl -X PUT https://api.versera.dev/v1/me/password \\
+  -H "Authorization: Bearer YOUR_TOKEN" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "currentPassword": "oldpassword",
+    "newPassword": "newpassword123"
+  }'`} />
+
+          <h4 className="font-semibold mt-4 mb-2">Example response</h4>
+          <CodeBlock code={`{ "message": "Password updated" }`} />
+
+          <div className="mt-4 space-y-1 text-sm text-zinc-500">
+            <p><strong>401</strong> — Current password is incorrect</p>
+            <p><strong>400</strong> — New password must be at least 8 characters</p>
+          </div>
+
+          {/* ── DELETE ACCOUNT ── */}
+          <SectionHeading id="delete-account">Delete account</SectionHeading>
+          <EndpointBadge method="DELETE" path="/v1/me" />
+          <p className="text-sm text-zinc-500 mb-1"><strong>Authentication:</strong> Bearer JWT</p>
+          <p className="text-zinc-600 mb-4">Permanently delete your account and all associated data. This action cannot be undone. A confirmation email is sent before deletion.</p>
+
+          <h4 className="font-semibold mb-2">Request body</h4>
+          <BodyTable params={[
+            { name: "confirmation", type: "string", required: "required", desc: 'Must be exactly "DELETE"' },
+          ]} />
+
+          <h4 className="font-semibold mt-4 mb-2">Example request</h4>
+          <CodeBlock code={`curl -X DELETE https://api.versera.dev/v1/me \\
+  -H "Authorization: Bearer YOUR_TOKEN" \\
+  -H "Content-Type: application/json" \\
+  -d '{ "confirmation": "DELETE" }'`} />
+
+          <p className="text-sm text-zinc-500 mt-4 mb-2"><strong>Response:</strong> 204 No Content</p>
+
+          <div className="mt-4 rounded-lg border-l-4 border-red-400 bg-red-50 p-4 text-sm text-red-800">
+            <strong>Warning:</strong> This permanently deletes all your prompts, versions, API keys, and billing history. This cannot be undone.
+          </div>
+
+          {/* ── SUBMIT TESTIMONIAL ── */}
+          <SectionHeading id="submit-testimonial">Submit a testimonial</SectionHeading>
+          <EndpointBadge method="POST" path="/v1/testimonials" />
+          <p className="text-sm text-zinc-500 mb-1"><strong>Authentication:</strong> Public — no authentication required</p>
+          <p className="text-zinc-600 mb-4">Submit a testimonial about your experience with Versera. Testimonials are reviewed before being published on versera.dev</p>
+
+          <h4 className="font-semibold mb-2">Request body</h4>
+          <BodyTable params={[
+            { name: "name", type: "string", required: "required", desc: "Your name" },
+            { name: "role", type: "string", required: "required", desc: "Your role/title" },
+            { name: "content", type: "string", required: "required", desc: "Your experience (max 500 chars)" },
+            { name: "rating", type: "number", required: "required", desc: "Rating from 1 to 5" },
+          ]} />
+
+          <h4 className="font-semibold mt-4 mb-2">Example request</h4>
+          <CodeBlock code={`curl -X POST https://api.versera.dev/v1/testimonials \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "name": "Marcus T.",
+    "role": "Senior ML Engineer",
+    "content": "Versera solved our prompt versioning problem instantly.",
+    "rating": 5
+  }'`} />
+
+          <h4 className="font-semibold mt-4 mb-2">Example response (201)</h4>
+          <CodeBlock code={`{
+  "id": "clx1234...",
+  "name": "Marcus T.",
+  "role": "Senior ML Engineer",
+  "content": "Versera solved our prompt versioning problem instantly.",
+  "rating": 5,
+  "status": "PENDING",
+  "createdAt": "2026-04-05T10:00:00Z"
+}`} />
+
+          {/* ── VIEW TESTIMONIALS ── */}
+          <SectionHeading id="view-testimonials">View testimonials</SectionHeading>
+          <EndpointBadge method="GET" path="/v1/testimonials" />
+          <p className="text-sm text-zinc-500 mb-1"><strong>Authentication:</strong> Public — no authentication required</p>
+          <p className="text-zinc-600 mb-4">Returns all approved testimonials. Pending and rejected testimonials are not included.</p>
+
+          <h4 className="font-semibold mt-4 mb-2">Example request</h4>
+          <CodeBlock code={`curl https://api.versera.dev/v1/testimonials`} />
+
+          <h4 className="font-semibold mt-4 mb-2">Example response (200)</h4>
+          <CodeBlock code={`[
+  {
+    "id": "clx1234...",
+    "name": "Marcus T.",
+    "role": "Senior ML Engineer",
+    "content": "Versera solved our prompt versioning problem instantly.",
+    "rating": 5,
+    "status": "APPROVED",
+    "createdAt": "2026-04-05T10:00:00Z"
+  }
+]`} />
+
           {/* ── ERROR CODES ── */}
           <SectionHeading id="error-codes">Error codes</SectionHeading>
 
@@ -766,6 +998,7 @@ curl https://api.versera.dev/v1/prompts \\
                   ["400", "Bad request", "Missing or invalid parameters"],
                   ["401", "Unauthorized", "Invalid or missing API key/token"],
                   ["402", "Payment required", "Insufficient credits"],
+                  ["403", "Forbidden", "Admin access required"],
                   ["404", "Not found", "Prompt or resource not found"],
                   ["409", "Conflict", "Resource already exists (e.g. duplicate slug)"],
                   ["429", "Too many requests", "Rate limit exceeded"],
