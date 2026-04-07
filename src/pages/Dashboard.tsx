@@ -154,6 +154,16 @@ export default function Dashboard() {
           </Table>
         </Card>
       </div>
+
+      {/* Analytics */}
+      <DashboardAnalytics
+        stats={stats}
+        statsLoading={statsLoading}
+        usage={usage}
+        usageLoading={usageLoading}
+        prompts={prompts}
+        promptsLoading={promptsLoading}
+      />
     </div>
   );
 }
