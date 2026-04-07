@@ -13,6 +13,10 @@ import {
   X as XIcon,
   Sun,
   Moon,
+  MessageSquare,
+  FileText,
+  Tag,
+  Zap,
 } from "lucide-react";
 import { useTestimonials } from "@/hooks/useTestimonials";
 import { api } from "@/lib/api";
@@ -415,6 +419,139 @@ export default function Landing() {
             </motion.div>
           ))}
         </div>
+      </Section>
+
+      {/* ====== USE CASES ====== */}
+      <Section className="mx-auto max-w-5xl px-5 py-24">
+        <motion.h2 variants={fadeUp} className="text-center text-3xl font-bold mb-3 text-foreground">
+          What can you build with Versera?
+        </motion.h2>
+        <motion.p variants={fadeUp} className="mx-auto max-w-[560px] text-center text-muted-foreground mb-12">
+          Any app that talks to an LLM can use Versera. Here are the most common use cases.
+        </motion.p>
+
+        <div className="grid gap-5 md:grid-cols-2">
+          {[
+            {
+              icon: MessageSquare,
+              title: "Chatbots & assistants",
+              body: "Your chatbot's system prompt is the most important string in your app. Version it like code — test variations, promote winners to prod, rollback instantly when it goes off-rails.",
+              code: [
+                { t: "// Fetch your chatbot system prompt", c: "comment" },
+                { t: "const { template } = await versera.resolve(", c: "code" },
+                { t: "  'customer-support-bot',", c: "string" },
+                { t: "  { tone: 'friendly', product: 'Versera' }", c: "string" },
+                { t: ")", c: "code" },
+                { t: "", c: "blank" },
+                { t: "await anthropic.messages.create({", c: "code" },
+                { t: "  system: template,", c: "code" },
+                { t: "  messages: [{ role: 'user', content: msg }]", c: "code" },
+                { t: "})", c: "code" },
+              ],
+            },
+            {
+              icon: FileText,
+              title: "Document summarizers",
+              body: "Summarization prompts need constant tuning — length, format, focus areas all change per use case. Versera lets you iterate on the prompt without touching your application code.",
+              code: [
+                { t: "// Resolve with runtime variables", c: "comment" },
+                { t: "const { template } = await versera.resolve(", c: "code" },
+                { t: "  'summarize-doc',", c: "string" },
+                { t: "  {", c: "code" },
+                { t: "    format: 'bullet-points',", c: "string" },
+                { t: "    max_words: '200',", c: "string" },
+                { t: "    document: userDocument", c: "code" },
+                { t: "  }", c: "code" },
+                { t: ")", c: "code" },
+                { t: "", c: "blank" },
+                { t: "const summary = await openai.chat({", c: "code" },
+                { t: "  messages: [{ role: 'user', content: template }]", c: "code" },
+                { t: "})", c: "code" },
+              ],
+            },
+            {
+              icon: Tag,
+              title: "Content classifiers",
+              body: "Classification prompts are fragile — one word change can shift your accuracy by 20%. Version every change, A/B test variants, and rollback the moment accuracy drops.",
+              code: [
+                { t: "// Always serving the best-performing version", c: "comment" },
+                { t: "const { template } = await versera.resolve(", c: "code" },
+                { t: "  'classify-intent',", c: "string" },
+                { t: "  { user_message: incomingMessage }", c: "code" },
+                { t: ")", c: "code" },
+                { t: "", c: "blank" },
+                { t: "// Rollback if accuracy drops:", c: "comment" },
+                { t: "// POST /v1/prompts/classify-intent", c: "comment" },
+                { t: "//      /versions/4/rollback", c: "comment" },
+              ],
+            },
+            {
+              icon: Zap,
+              title: "Email & content generators",
+              body: "Marketing copy, email templates, product descriptions — all driven by prompts your team tweaks constantly. Let non-technical teammates update prompts from the dashboard without a single deployment.",
+              code: [
+                { t: "// Non-devs update prompts in dashboard", c: "comment" },
+                { t: "// Devs never touch this code again", c: "comment" },
+                { t: "const { template } = await versera.resolve(", c: "code" },
+                { t: "  'product-email',", c: "string" },
+                { t: "  {", c: "code" },
+                { t: "    product_name: product.name,", c: "code" },
+                { t: "    tone: 'conversational',", c: "string" },
+                { t: "    cta: 'Start free trial'", c: "string" },
+                { t: "  }", c: "code" },
+                { t: ")", c: "code" },
+              ],
+            },
+          ].map((card) => (
+            <motion.div
+              key={card.title}
+              variants={fadeUp}
+              className="rounded-lg border border-[#1f2937] bg-[#111111] p-7 border-l-[3px] border-l-primary hover:border-[#10b981] hover:border-l-primary transition-colors"
+            >
+              <div className="mb-4 flex h-9 w-9 items-center justify-center rounded-md bg-primary/10 text-primary">
+                <card.icon className="h-4.5 w-4.5" />
+              </div>
+              <h3 className="text-base font-semibold mb-2 text-white">{card.title}</h3>
+              <p className="text-sm text-gray-400 leading-relaxed mb-4">{card.body}</p>
+              <pre className="rounded-md bg-[#0a0a0a] p-4 overflow-x-auto text-[12px] leading-5 font-mono">
+                {card.code.map((line, i) => (
+                  <div key={i}>
+                    {line.c === "blank" ? (
+                      <span>&nbsp;</span>
+                    ) : line.c === "comment" ? (
+                      <span className="text-gray-500">{line.t}</span>
+                    ) : line.c === "string" ? (
+                      <span className="text-emerald-400">{line.t}</span>
+                    ) : (
+                      <span className="text-gray-300">{line.t}</span>
+                    )}
+                  </div>
+                ))}
+              </pre>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* LLM compatibility banner */}
+        <motion.div
+          variants={fadeUp}
+          className="mt-8 rounded-lg border border-[#1f2937] bg-[#111111] p-6 text-center"
+        >
+          <p className="text-sm text-gray-400 mb-4">
+            Works with Claude, GPT-4, Gemini, Llama, Mistral, and any LLM.
+            The resolve endpoint returns a string — pass it to any model you want.
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            {["Claude", "GPT-4", "Gemini", "Llama", "Mistral"].map((name) => (
+              <span
+                key={name}
+                className="rounded border border-[#374151] px-3 py-1 text-xs text-gray-400"
+              >
+                {name}
+              </span>
+            ))}
+          </div>
+        </motion.div>
       </Section>
 
       {/* ====== DASHBOARD PREVIEW ====== */}
