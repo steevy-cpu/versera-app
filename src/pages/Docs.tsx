@@ -479,7 +479,30 @@ const { template } = await response.json()`,
                     },
                     {
                       label: "Node.js SDK",
-                      code: `npm install versera-app`,
+                      code: `# Install the SDK
+npm install versera-app
+
+# Usage
+import { Versera } from 'versera-app'
+
+const versera = new Versera({
+  apiKey: process.env.VERSERA_API_KEY
+})
+
+// Resolve your prompt
+const { template } = await versera.resolve(
+  'summarize-doc',
+  {
+    tone: 'professional',
+    document: userDocument
+  }
+)
+
+// Pass to any LLM
+const response = await anthropic.messages.create({
+  model: 'claude-sonnet-4-6',
+  messages: [{ role: 'user', content: template }]
+})`,
                     },
                     {
                       label: "Python",
