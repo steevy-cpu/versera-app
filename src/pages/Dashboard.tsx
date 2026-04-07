@@ -15,8 +15,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Plus } from "lucide-react";
-import { useStats } from "@/hooks/useAuth";
+import { useStats, useUsage } from "@/hooks/useAuth";
 import { usePrompts } from "@/hooks/usePrompts";
+import DashboardAnalytics from "@/components/DashboardAnalytics";
 import OnboardingModal, { ONBOARDING_KEY } from "@/components/OnboardingModal";
 
 function envColor(env: string) {
