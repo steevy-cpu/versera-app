@@ -518,29 +518,6 @@ template = response.json()['template']`,
                   ]}
                 />
               </div>
-              {/* SDK usage shown when Node.js SDK tab concept — full example below install */}
-              <div className="mt-3">
-                <CodeBlock code={`import { Versera } from 'versera-app'
-
-const versera = new Versera({
-  apiKey: process.env.VERSERA_API_KEY
-})
-
-// Resolve your prompt
-const { template } = await versera.resolve(
-  'summarize-doc',
-  {
-    tone: 'professional',
-    document: userDocument
-  }
-)
-
-// Pass to any LLM
-const response = await anthropic.messages.create({
-  model: 'claude-sonnet-4-6',
-  messages: [{ role: 'user', content: template }]
-})`} className="hidden" />
-              </div>
             </div>
           </div>
 
