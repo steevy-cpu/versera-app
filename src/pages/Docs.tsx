@@ -515,6 +515,20 @@ response = requests.get(
 )
 template = response.json()['template']`,
                     },
+                    {
+                      label: "Node.js SDK",
+                      code: `// npm install versera-app
+import { Versera } from 'versera-app'
+
+const versera = new Versera({
+  apiKey: process.env.VERSERA_API_KEY
+})
+
+const { template } = await versera.resolve(
+  'your-prompt-name',
+  { variable1: 'value1', variable2: 'value2' }
+)`,
+                    },
                   ]}
                 />
               </div>
@@ -1057,6 +1071,97 @@ try {
 
           <p className="text-sm text-zinc-500 mt-4 mb-2">Result returned:</p>
           <CodeBlock code={`Write a professional email to the team about the product launch.`} />
+
+          {/* ── NODE.JS SDK ── */}
+          <SectionHeading id="nodejs-sdk">Node.js SDK</SectionHeading>
+          <div className="flex items-center gap-2 mt-2 mb-4">
+            <code className="rounded bg-zinc-100 px-3 py-1 text-sm font-mono text-zinc-700">npm install versera-app</code>
+            <a href="https://www.npmjs.com/package/versera-app" target="_blank" rel="noopener noreferrer" className="text-xs text-[#10b981] underline hover:text-[#059669] transition-colors">View on npm →</a>
+          </div>
+          <p className="text-zinc-600 mb-6">
+            The official TypeScript SDK wraps the Versera API with full type safety. Zero dependencies.
+          </p>
+
+          <h3 className="text-lg font-semibold mt-6 mb-3">Installation & initialization</h3>
+          <CodeBlock code={`import { Versera } from 'versera-app'
+
+const versera = new Versera({
+  apiKey: process.env.VERSERA_API_KEY   // must start with vrs_
+})`} />
+
+          <h3 className="text-lg font-semibold mt-8 mb-3">Methods</h3>
+
+          <div className="space-y-6">
+            <div>
+              <p className="font-mono text-sm font-semibold text-zinc-800 mb-1">versera.resolve(slug, variables?, options?)</p>
+              <p className="text-sm text-zinc-500 mb-2">Resolves a prompt with variables injected. Costs 1 credit.</p>
+              <CodeBlock code={`const { template } = await versera.resolve(
+  'summarize-doc',
+  { tone: 'professional', document: userDoc },
+  { environment: 'prod' }
+)`} />
+            </div>
+
+            <div>
+              <p className="font-mono text-sm font-semibold text-zinc-800 mb-1">versera.push(input)</p>
+              <p className="text-sm text-zinc-500 mb-2">Creates a prompt or saves a new version. Free.</p>
+              <CodeBlock code={`await versera.push({
+  name: 'summarize-doc',
+  environment: 'prod',
+  template: 'Summarize {{document}} in {{tone}} style.',
+  message: 'Initial version'
+})`} />
+            </div>
+
+            <div>
+              <p className="font-mono text-sm font-semibold text-zinc-800 mb-1">versera.list(options?)</p>
+              <p className="text-sm text-zinc-500 mb-2">Lists all prompts, optionally filtered. Free.</p>
+              <CodeBlock code={`const prompts = await versera.list({ environment: 'prod' })`} />
+            </div>
+
+            <div>
+              <p className="font-mono text-sm font-semibold text-zinc-800 mb-1">versera.get(slug)</p>
+              <p className="text-sm text-zinc-500 mb-2">Gets a prompt with full version history. Free.</p>
+              <CodeBlock code={`const prompt = await versera.get('summarize-doc')`} />
+            </div>
+
+            <div>
+              <p className="font-mono text-sm font-semibold text-zinc-800 mb-1">versera.saveVersion(slug, input)</p>
+              <p className="text-sm text-zinc-500 mb-2">Saves a new version of an existing prompt. Free.</p>
+              <CodeBlock code={`await versera.saveVersion('summarize-doc', {
+  template: 'Summarize {{document}} in {{tone}} and {{length}} style.',
+  message: 'Added length variable'
+})`} />
+            </div>
+
+            <div>
+              <p className="font-mono text-sm font-semibold text-zinc-800 mb-1">versera.rollback(slug, version)</p>
+              <p className="text-sm text-zinc-500 mb-2">Rolls back to a previous version. Free.</p>
+              <CodeBlock code={`await versera.rollback('summarize-doc', 3)`} />
+            </div>
+
+            <div>
+              <p className="font-mono text-sm font-semibold text-zinc-800 mb-1">versera.log(input)</p>
+              <p className="text-sm text-zinc-500 mb-2">Logs a quality score for A/B testing. Free.</p>
+              <CodeBlock code={`await versera.log({
+  versionId: result.versionId,
+  score: 0.92,
+  metadata: { model: 'claude-sonnet-4-6' }
+})`} />
+            </div>
+          </div>
+
+          <h3 className="text-lg font-semibold mt-8 mb-3">Error handling</h3>
+          <CodeBlock code={`import { Versera, VerseraError } from 'versera-app'
+
+try {
+  const { template } = await versera.resolve('my-prompt')
+} catch (error) {
+  if (error instanceof VerseraError) {
+    if (error.status === 402) console.log('Out of credits!')
+    if (error.status === 404) console.log('Prompt not found')
+  }
+}`} />
 
           <div className="h-24" />
         </div>

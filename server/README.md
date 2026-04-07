@@ -41,7 +41,7 @@ npm run db:migrate    # apply migrations to the database
 ### 4. Start the dev server
 
 ```bash
-npm run dev           # ts-node-dev with hot reload on https://api.versera.dev
+npm run dev           # ts-node-dev with hot reload on http://localhost:3001
 ```
 
 ---
@@ -60,7 +60,26 @@ npm run dev           # ts-node-dev with hot reload on https://api.versera.dev
 
 ---
 
+## Credits & pricing
+
+| Operation | Credits | Notes |
+|-----------|---------|-------|
+| `GET /v1/resolve/:slug` | 1 credit | Per call |
+| All other endpoints | Free | No cost |
+
+---
+
 ## API Reference
+
+### Health check
+
+```bash
+GET /health
+```
+
+No auth required. Returns `{ "status": "ok" }`. Use for uptime monitoring.
+
+---
 
 All authenticated endpoints require an `Authorization: Bearer <token>` header unless noted.  
 The resolve endpoint uses `x-api-key: <key>` instead.
@@ -151,6 +170,67 @@ curl https://api.versera.dev/v1/me/stats \
 curl https://api.versera.dev/v1/me/usage \
   -H "Authorization: Bearer <token>"
 ```
+
+```json
+{
+  "resolveCalls": 142,
+  "abAssignments": 0,
+  "logsSubmitted": 0
+}
+```
+
+---
+
+### Account
+
+#### Change password
+
+```bash
+curl -X PUT https://api.versera.dev/v1/me/password \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "currentPassword": "oldsecret123",
+    "newPassword": "newsecret456"
+  }'
+```
+
+**Request body**
+
+| Field | Type | Required | Notes |
+|-------|------|----------|-------|
+| `currentPassword` | string | Yes | Must match the account's current password |
+| `newPassword` | string | Yes | Minimum 8 characters |
+
+**Response `200`**
+```json
+{ "message": "Password updated" }
+```
+
+**Errors:** `401` if `currentPassword` is wrong · `400` if `newPassword` is fewer than 8 characters
+
+---
+
+#### Delete account
+
+Permanently deletes the account and all associated data: prompts, versions, API keys, and transactions. A confirmation email is sent before deletion.
+
+```bash
+curl -X DELETE https://api.versera.dev/v1/me \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{ "confirmation": "DELETE" }'
+```
+
+**Request body**
+
+| Field | Type | Required | Notes |
+|-------|------|----------|-------|
+| `confirmation` | string | Yes | Must be the exact string `"DELETE"` |
+
+**Response `204`** — No Content
+
+**Errors:** `400` if `confirmation` is not `"DELETE"`
 
 ---
 
@@ -340,6 +420,174 @@ curl -X POST https://api.versera.dev/v1/billing/checkout \
   -d '{ "plan": "growth" }'
 ```
 
+**Response `200`**
+```json
+{
+  "checkoutUrl": "https://checkout.stripe.com/..."
+}
+```
+
+---
+
+### Testimonials
+
+#### Submit a testimonial
+
+Public — no auth required. Submitted testimonials have `PENDING` status until approved by an admin.
+
+```bash
+curl -X POST https://api.versera.dev/v1/testimonials \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Marcus T.",
+    "role": "Senior ML Engineer",
+    "content": "Versera solved our prompt drift problem overnight.",
+    "rating": 5
+  }'
+```
+
+**Request body**
+
+| Field | Type | Required | Notes |
+|-------|------|----------|-------|
+| `name` | string | Yes | |
+| `role` | string | Yes | |
+| `content` | string | Yes | Max 500 characters |
+| `rating` | number | Yes | Integer 1–5 |
+
+**Response `201`**
+```json
+{
+  "id": "clx...",
+  "name": "Marcus T.",
+  "role": "Senior ML Engineer",
+  "content": "Versera solved our prompt drift problem overnight.",
+  "rating": 5,
+  "status": "PENDING",
+  "createdAt": "2026-04-05T12:00:00.000Z"
+}
+```
+
+#### List approved testimonials
+
+Public — no auth required. Returns only testimonials with `APPROVED` status.
+
+```bash
+curl https://api.versera.dev/v1/testimonials
+```
+
+**Response `200`**
+```json
+[
+  {
+    "id": "clx...",
+    "name": "Marcus T.",
+    "role": "Senior ML Engineer",
+    "content": "Versera solved our prompt drift problem overnight.",
+    "rating": 5,
+    "status": "APPROVED",
+    "createdAt": "2026-04-05T12:00:00.000Z"
+  }
+]
+```
+
+---
+
+### Admin
+
+All admin endpoints require a JWT token from an account with `isAdmin: true`.
+
+#### Platform stats
+
+```bash
+curl https://api.versera.dev/v1/admin/stats \
+  -H "Authorization: Bearer <admin-token>"
+```
+
+**Response `200`**
+```json
+{
+  "totalUsers": 4,
+  "totalPrompts": 12,
+  "totalResolves": 842,
+  "totalRevenueCents": 1800,
+  "newUsersToday": 1,
+  "newUsersThisWeek": 4,
+  "activeUsersThisWeek": 2
+}
+```
+
+#### List all users
+
+```bash
+curl "https://api.versera.dev/v1/admin/users?page=1&limit=20" \
+  -H "Authorization: Bearer <admin-token>"
+```
+
+**Query params:** `page` (default 1) · `limit` (default 20, max 100)
+
+**Response `200`**
+```json
+{
+  "users": [...],
+  "total": 4,
+  "page": 1,
+  "totalPages": 1
+}
+```
+
+#### Get user detail
+
+```bash
+curl https://api.versera.dev/v1/admin/users/<user-id> \
+  -H "Authorization: Bearer <admin-token>"
+```
+
+Returns full user object including prompts, transactions, and API keys.
+
+#### Revenue breakdown
+
+```bash
+curl https://api.versera.dev/v1/admin/revenue \
+  -H "Authorization: Bearer <admin-token>"
+```
+
+**Response `200`**
+```json
+{
+  "totalRevenueCents": 1800,
+  "thisMonthCents": 1800,
+  "lastMonthCents": 0,
+  "byPlan": {
+    "starter": { "count": 2, "revenueCents": 1800 },
+    "growth":  { "count": 0, "revenueCents": 0 },
+    "scale":   { "count": 0, "revenueCents": 0 }
+  },
+  "recentTransactions": [...]
+}
+```
+
+#### Testimonial moderation
+
+```bash
+# List all (any status)
+curl https://api.versera.dev/v1/testimonials/admin \
+  -H "Authorization: Bearer <admin-token>"
+
+# Approve
+curl -X PUT https://api.versera.dev/v1/testimonials/admin/<id>/approve \
+  -H "Authorization: Bearer <admin-token>"
+
+# Reject
+curl -X PUT https://api.versera.dev/v1/testimonials/admin/<id>/reject \
+  -H "Authorization: Bearer <admin-token>"
+
+# Delete
+curl -X DELETE https://api.versera.dev/v1/testimonials/admin/<id> \
+  -H "Authorization: Bearer <admin-token>"
+# 204 No Content
+```
+
 ---
 
 ## Error Responses
@@ -355,6 +603,7 @@ All errors follow the same shape:
 | `400` | Validation error — check the `error` field |
 | `401` | Missing, invalid, or expired token / API key |
 | `402` | Insufficient credits |
+| `403` | Forbidden — admin access required |
 | `404` | Resource not found or belongs to a different user |
 | `409` | Conflict — e.g. duplicate prompt slug |
 | `500` | Internal server error |
