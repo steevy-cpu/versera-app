@@ -37,6 +37,7 @@ function statusColor(status: string) {
 export default function Dashboard() {
   const navigate = useNavigate();
   const { data: stats, isLoading: statsLoading } = useStats();
+  const { data: usage, isLoading: usageLoading } = useUsage();
   const { data: prompts, isLoading: promptsLoading } = usePrompts();
   const user = getUser();
   const [showOnboarding, setShowOnboarding] = useState(false);
