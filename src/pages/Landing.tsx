@@ -13,6 +13,10 @@ import {
   X as XIcon,
   Sun,
   Moon,
+  MessageSquare,
+  FileText,
+  Tag,
+  Zap,
 } from "lucide-react";
 import { useTestimonials } from "@/hooks/useTestimonials";
 import { api } from "@/lib/api";
