@@ -5,7 +5,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
-import { useAdminStats, useAdminUsers } from "@/hooks/useAdmin";
+import { useAdminStats, useAdminUsers, useAdminRevenue } from "@/hooks/useAdmin";
+import { AdminOverviewAnalytics } from "@/components/AdminAnalytics";
 
 function cents(v: number) {
   return `$${(v / 100).toFixed(2)}`;
@@ -14,6 +15,7 @@ function cents(v: number) {
 export default function AdminOverview() {
   const { data: stats, isLoading: statsLoading, error: statsError } = useAdminStats();
   const { data: usersData, isLoading: usersLoading } = useAdminUsers(1, 10);
+  const { data: revenue, isLoading: revenueLoading } = useAdminRevenue();
   const navigate = useNavigate();
 
   const metrics = [
@@ -119,6 +121,14 @@ export default function AdminOverview() {
           </Table>
         </Card>
       </div>
+
+      {/* Analytics charts */}
+      <AdminOverviewAnalytics
+        stats={stats}
+        statsLoading={statsLoading}
+        revenue={revenue}
+        revenueLoading={revenueLoading}
+      />
     </div>
   );
 }
