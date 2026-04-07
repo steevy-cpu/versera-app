@@ -1,0 +1,22 @@
+{
+  "name": "versera",
+  "version": "0.1.0",
+  "description": "Official JavaScript SDK for the Versera prompt version control API",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "node test.js"
+  },
+  "keywords": [
+    "versera", "prompt", "llm",
+    "version-control", "ai"
+  ],
+  "author": "Versera",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
