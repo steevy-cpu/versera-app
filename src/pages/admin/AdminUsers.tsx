@@ -8,7 +8,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
-import { useAdminUsers } from "@/hooks/useAdmin";
+import { useAdminUsers, useAdminStats } from "@/hooks/useAdmin";
+import { AdminUserStats } from "@/components/AdminAnalytics";
 
 function cents(v: number) {
   return `$${(v / 100).toFixed(2)}`;
@@ -19,6 +20,7 @@ export default function AdminUsers() {
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
   const { data, isLoading, error } = useAdminUsers(page, 20);
+  const { data: stats, isLoading: statsLoading } = useAdminStats();
 
   const filtered = useMemo(() => {
     if (!data?.users) return [];
@@ -37,6 +39,9 @@ export default function AdminUsers() {
           <p className="text-sm text-muted-foreground mt-1">{data.total} users total</p>
         )}
       </div>
+
+      {/* User stat cards */}
+      <AdminUserStats stats={stats} isLoading={statsLoading} />
 
       <Input
         placeholder="Search by name or email…"

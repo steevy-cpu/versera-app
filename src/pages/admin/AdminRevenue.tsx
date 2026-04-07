@@ -5,6 +5,7 @@ import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
 import { useAdminRevenue } from "@/hooks/useAdmin";
+import { AdminRevenueChart } from "@/components/AdminAnalytics";
 
 function cents(v: number) {
   return `$${(v / 100).toFixed(2)}`;
@@ -28,6 +29,9 @@ export default function AdminRevenue() {
       {error && (
         <p className="text-sm" style={{ color: "#E24B4A" }}>Failed to load revenue data.</p>
       )}
+
+      {/* Revenue over time chart */}
+      <AdminRevenueChart revenue={data} isLoading={isLoading} />
 
       <div className="grid grid-cols-3 gap-4">
         {topMetrics.map((m) => (
