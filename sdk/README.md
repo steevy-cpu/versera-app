@@ -5,13 +5,13 @@ Official JavaScript/TypeScript SDK for [Versera](https://versera.dev) — prompt
 ## Installation
 
 ```bash
-npm install versera
+npm install versera-app
 ```
 
 ## Quick start
 
 ```typescript
-import { Versera } from 'versera'
+import { Versera } from 'versera-app'
 
 const versera = new Versera({
   apiKey: process.env.VERSERA_API_KEY!
@@ -59,7 +59,7 @@ Logs a quality score for A/B testing.
 ## Error handling
 
 ```typescript
-import { Versera, VerseraError } from 'versera'
+import { Versera, VerseraError } from 'versera-app'
 
 try {
   const { template } = await versera.resolve(

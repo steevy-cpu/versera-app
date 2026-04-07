@@ -1,5 +1,5 @@
 {
-  "name": "versera",
+  "name": "versera-app",
   "version": "0.1.0",
   "description": "Official JavaScript SDK for the Versera prompt version control API",
   "main": "dist/index.js",
