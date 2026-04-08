@@ -4,6 +4,10 @@
 .env.*.local
 server/.env
 
+# Supabase local config (contains real project ID)
+supabase/config.toml
+supabase/
+
 # Dependencies
 node_modules/
 server/node_modules/
