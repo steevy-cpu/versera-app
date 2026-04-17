@@ -86,6 +86,22 @@ function CopyButton({ text }: { text: string }) {
   );
 }
 
+function CloneRepoButton({ command }: { command: string }) {
+  const [copied, setCopied] = useState(false);
+  return (
+    <button
+      onClick={() => {
+        navigator.clipboard.writeText(command);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      }}
+      className="inline-flex items-center gap-2 rounded-md border border-white/10 bg-white/5 px-4 py-2 text-xs font-medium text-white hover:bg-white/10 transition-colors"
+    >
+      {copied ? <><Check className="h-3 w-3" /> Copied!</> : <><Copy className="h-3 w-3" /> Clone repo</>}
+    </button>
+  );
+}
+
 function CodeBlock({ code, className = "" }: { code: string; className?: string }) {
   return (
     <div className={`relative rounded-lg bg-[#111] overflow-hidden ${className}`}>
