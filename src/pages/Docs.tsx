@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Copy, Check, Plus, X, Loader2, Menu, Sun, Moon } from "lucide-react";
+import { ArrowLeft, Copy, Check, Plus, X, Loader2, Menu, Sun, Moon, Github, ExternalLink } from "lucide-react";
 import { useTheme } from "@/components/ThemeToggle";
 import { VLogoFull } from "@/components/VLogo";
 
@@ -49,6 +49,12 @@ const NAV = [
     ],
   },
   {
+    label: "EXAMPLES",
+    items: [
+      { title: "Claude chatbot", id: "claude-chatbot" },
+    ],
+  },
+  {
     label: "REFERENCE",
     items: [
       { title: "Error codes", id: "error-codes" },
@@ -76,6 +82,22 @@ function CopyButton({ text }: { text: string }) {
       className="absolute top-3 right-3 flex items-center gap-1 rounded px-2 py-1 text-xs text-zinc-400 hover:text-white hover:bg-white/10 transition-colors"
     >
       {copied ? <><Check className="h-3 w-3" /> Copied!</> : <><Copy className="h-3 w-3" /> Copy</>}
+    </button>
+  );
+}
+
+function CloneRepoButton({ command }: { command: string }) {
+  const [copied, setCopied] = useState(false);
+  return (
+    <button
+      onClick={() => {
+        navigator.clipboard.writeText(command);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      }}
+      className="inline-flex items-center gap-2 rounded-md border border-white/10 bg-white/5 px-4 py-2 text-xs font-medium text-white hover:bg-white/10 transition-colors"
+    >
+      {copied ? <><Check className="h-3 w-3" /> Copied!</> : <><Copy className="h-3 w-3" /> Clone repo</>}
     </button>
   );
 }
@@ -1082,6 +1104,56 @@ try {
     "createdAt": "2026-04-05T10:00:00Z"
   }
 ]`} />
+
+          {/* ── CLAUDE CHATBOT EXAMPLE ── */}
+          <SectionHeading id="claude-chatbot">Claude chatbot example</SectionHeading>
+          <p className="text-zinc-500 mb-6">
+            A complete working example of building a customer support chatbot with Versera and Claude in 20 lines of code.
+          </p>
+
+          <div className="rounded-lg bg-[#0a0a0a] border border-[#1f2937] p-6 my-6">
+            <div className="flex items-start gap-4">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-white/5 border border-white/10">
+                <Github className="h-5 w-5 text-white" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h4 className="text-white font-semibold font-mono text-sm">versera-claude-example</h4>
+                <p className="text-zinc-400 text-sm mt-1">Customer support chatbot using Versera + Claude</p>
+                <a
+                  href="https://github.com/steevy-cpu/versera-claude-example"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#10b981] hover:text-[#34d399] text-xs font-mono mt-2 inline-flex items-center gap-1 transition-colors"
+                >
+                  github.com/steevy-cpu/versera-claude-example
+                </a>
+              </div>
+            </div>
+            <div className="flex flex-wrap gap-2 mt-5">
+              <a
+                href="https://github.com/steevy-cpu/versera-claude-example"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-md bg-[#10b981] px-4 py-2 text-xs font-medium text-white hover:bg-[#059669] transition-colors"
+              >
+                View on GitHub <ExternalLink className="h-3 w-3" />
+              </a>
+              <CloneRepoButton command="git clone https://github.com/steevy-cpu/versera-claude-example.git" />
+            </div>
+          </div>
+
+          <h3 className="text-lg font-semibold mt-8 mb-3">Quick start</h3>
+          <CodeBlock code={`git clone https://github.com/steevy-cpu/versera-claude-example.git
+cd versera-claude-example
+cp .env.example .env
+# Add your Versera and Anthropic keys
+npm install
+npm run setup
+npm start`} />
+
+          <p className="text-zinc-600 mt-6">
+            This example creates a <code className="font-mono text-sm bg-zinc-100 px-1 rounded">support-bot</code> prompt in your Versera account, then uses Claude to respond to customer messages. Edit the prompt on <Link to="/" className="text-[#10b981] underline hover:text-[#059669] transition-colors">versera.dev</Link> and see changes instantly — no redeploy.
+          </p>
 
           {/* ── ERROR CODES ── */}
           <SectionHeading id="error-codes">Error codes</SectionHeading>
