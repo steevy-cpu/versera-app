@@ -49,6 +49,12 @@ const NAV = [
     ],
   },
   {
+    label: "EXAMPLES",
+    items: [
+      { title: "Claude chatbot", id: "claude-chatbot" },
+    ],
+  },
+  {
     label: "REFERENCE",
     items: [
       { title: "Error codes", id: "error-codes" },
