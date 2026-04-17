@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Copy, Check, Plus, X, Loader2, Menu, Sun, Moon } from "lucide-react";
+import { ArrowLeft, Copy, Check, Plus, X, Loader2, Menu, Sun, Moon, Github, ExternalLink } from "lucide-react";
 import { useTheme } from "@/components/ThemeToggle";
 import { VLogoFull } from "@/components/VLogo";
 
