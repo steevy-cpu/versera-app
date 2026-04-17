@@ -593,7 +593,21 @@ curl https://api.versera.dev/v1/prompts \\
           <p className="text-zinc-600">Credits never expire. Purchase more at any time from your billing dashboard.</p>
 
           {/* ── NODE.JS SDK ── */}
-          <SectionHeading id="nodejs-sdk">Node.js SDK</SectionHeading>
+          <div className="flex items-center gap-3 mt-12 mb-2">
+            <SectionHeading id="nodejs-sdk" className="!mt-0 !mb-0">Node.js SDK</SectionHeading>
+            <span
+              className="inline-flex items-center font-mono"
+              style={{
+                backgroundColor: "rgba(16,185,129,0.1)",
+                color: "#10b981",
+                fontSize: "11px",
+                borderRadius: "4px",
+                padding: "2px 8px",
+              }}
+            >
+              v0.1.1
+            </span>
+          </div>
           <p className="text-zinc-500 mb-4">The official JavaScript and TypeScript SDK for Versera</p>
 
           <div className="flex items-center gap-3 mb-3">
@@ -609,16 +623,45 @@ curl https://api.versera.dev/v1/prompts \\
           </a>
 
           <h3 className="text-lg font-semibold mt-8 mb-2">Quick start</h3>
+          <p className="text-zinc-600 mb-3">
+            One API key works for every method — resolve, push, list, get, saveVersion, and rollback. No JWT token needed for prompt management.
+          </p>
           <CodeBlock code={`import { Versera } from 'versera-app'
 
 const versera = new Versera({
   apiKey: process.env.VERSERA_API_KEY
 })
 
+// Every method works with just the API key:
+
+// Resolve a prompt
 const { template } = await versera.resolve(
   'my-prompt',
   { variable: 'value' }
-)`} />
+)
+
+// Create or update a prompt
+await versera.push({
+  name: 'my-prompt',
+  environment: 'prod',
+  template: 'Hello {{name}}',
+  message: 'Initial version'
+})
+
+// List all prompts
+const prompts = await versera.list()
+
+// Get a prompt with history
+const prompt = await versera.get('my-prompt')
+
+// Save a new version
+await versera.saveVersion('my-prompt', {
+  template: 'Hi {{name}}!',
+  message: 'Friendlier greeting'
+})
+
+// Rollback to previous version
+await versera.rollback('my-prompt', 2)`} />
 
           <h3 className="text-lg font-semibold mt-8 mb-2">Methods</h3>
           <div className="overflow-x-auto rounded-lg border border-zinc-200 my-4">
