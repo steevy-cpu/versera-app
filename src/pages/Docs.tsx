@@ -538,16 +538,20 @@ const { template } = await versera.resolve(
           {/* ── AUTHENTICATION ── */}
           <SectionHeading id="authentication">Authentication</SectionHeading>
 
-          <h3 className="text-lg font-semibold mt-6 mb-2">API Key authentication (for resolve endpoint)</h3>
+          <p className="text-zinc-600 mt-4 mb-3">
+            Versera supports two authentication methods. <strong>API keys</strong> work for all prompt and version management endpoints — they're the recommended way to integrate with the SDK. <strong>JWT tokens</strong> are required for account, billing, and admin endpoints.
+          </p>
+
+          <h3 className="text-lg font-semibold mt-6 mb-2">API Key authentication</h3>
           <p className="text-zinc-600 mb-3">
-            The resolve endpoint uses API key auth. Pass your key in the <code className="font-mono text-sm bg-zinc-100 px-1 rounded">x-api-key</code> header. Each resolve call costs 1 credit.
+            Pass your key in the <code className="font-mono text-sm bg-zinc-100 px-1 rounded">x-api-key</code> header. API keys start with <code className="font-mono text-sm bg-zinc-100 px-1 rounded">vrs_live_</code> and can be generated from your dashboard.
           </p>
           <CodeBlock code={`curl https://api.versera.dev/v1/resolve/my-prompt \\
   -H "x-api-key: vrs_live_your_key"`} />
 
-          <h3 className="text-lg font-semibold mt-8 mb-2">JWT authentication (for dashboard API)</h3>
+          <h3 className="text-lg font-semibold mt-8 mb-2">JWT authentication</h3>
           <p className="text-zinc-600 mb-3">
-            All other endpoints use JWT bearer tokens. Get a token by logging in.
+            Required for account management, billing, and admin endpoints. Get a token by logging in.
           </p>
           <CodeBlock code={`# Login to get token
 curl -X POST https://api.versera.dev/auth/login \\
@@ -555,9 +559,47 @@ curl -X POST https://api.versera.dev/auth/login \\
   -d '{"email":"you@example.com","password":"yourpassword"}'
 
 # Use the token
-curl https://api.versera.dev/v1/prompts \\
+curl https://api.versera.dev/v1/me \\
   -H "Authorization: Bearer YOUR_JWT_TOKEN"`} />
 
+          <h3 className="text-lg font-semibold mt-8 mb-2">Auth method by endpoint</h3>
+          <div className="overflow-x-auto rounded-lg border border-zinc-200 my-4">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b bg-zinc-50 text-left text-xs text-zinc-500">
+                  <th className="px-4 py-2 font-medium">Endpoint</th>
+                  <th className="px-4 py-2 font-medium">Auth</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  ["GET /v1/resolve/:slug", "API Key"],
+                  ["GET /v1/prompts", "API Key or JWT"],
+                  ["POST /v1/prompts", "API Key or JWT"],
+                  ["GET /v1/prompts/:slug", "API Key or JWT"],
+                  ["PUT /v1/prompts/:slug", "API Key or JWT"],
+                  ["DELETE /v1/prompts/:slug", "API Key or JWT"],
+                  ["GET /v1/prompts/:slug/versions", "API Key or JWT"],
+                  ["POST /v1/prompts/:slug/versions", "API Key or JWT"],
+                  ["POST .../versions/:n/rollback", "API Key or JWT"],
+                  ["GET /v1/me", "JWT only"],
+                  ["PUT /v1/me/password", "JWT only"],
+                  ["DELETE /v1/me", "JWT only"],
+                  ["GET /v1/api-keys", "JWT only"],
+                  ["All /v1/billing/*", "JWT only"],
+                  ["All /v1/admin/*", "JWT only (admin)"],
+                ].map(([endpoint, auth]) => (
+                  <tr key={endpoint} className="border-b last:border-0">
+                    <td className="px-4 py-2 font-mono text-xs">{endpoint}</td>
+                    <td className="px-4 py-2 text-xs text-zinc-600">{auth}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="text-sm text-zinc-500 italic">
+            API keys work for all prompt and version management endpoints. Account, billing, and admin endpoints require a JWT token obtained via login.
+          </p>
           {/* ── CREDITS & LIMITS ── */}
           <SectionHeading id="credits-limits">Credits & limits</SectionHeading>
 
