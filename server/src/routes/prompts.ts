@@ -1,11 +1,11 @@
 import { Router, Request, Response } from "express";
 import { Environment, PromptStatus } from "@prisma/client";
-import { requireAuth } from "../middleware/requireAuth";
+import { requireAuthOrApiKey } from "../middleware/requireAuthOrApiKey";
 import prisma from "../lib/prisma";
 
 const router = Router();
 
-router.use(requireAuth);
+router.use(requireAuthOrApiKey);
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 

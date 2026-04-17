@@ -2,41 +2,55 @@ import { Request, Response, NextFunction } from "express";
 import crypto from "crypto";
 import prisma from "../lib/prisma";
 
-function sha256(value: string): string {
-  return crypto.createHash("sha256").update(value).digest("hex");
-}
-
 export async function requireApiKey(
   req: Request,
   res: Response,
   next: NextFunction
 ): Promise<void> {
-  const rawKey = req.headers["x-api-key"];
+  const apiKey = req.header("x-api-key");
 
-  if (!rawKey || typeof rawKey !== "string") {
-    res.status(401).json({ error: "Missing x-api-key header" });
+  if (!apiKey) {
+    res.status(401).json({ error: "API key required" });
     return;
   }
 
-  const keyHash = sha256(rawKey);
+  if (!apiKey.startsWith("vrs_")) {
+    res.status(401).json({ error: "Invalid API key format" });
+    return;
+  }
 
-  const apiKey = await prisma.apiKey.findUnique({
-    where: { keyHash },
-    include: { user: true },
+  const keyHash = crypto
+    .createHash("sha256")
+    .update(apiKey)
+    .digest("hex");
+
+  const record = await prisma.apiKey.findFirst({
+    where: {
+      keyHash,
+      revokedAt: null,
+    },
+    include: {
+      user: true,
+    },
   });
 
-  if (!apiKey || apiKey.revokedAt !== null) {
+  if (!record || !record.user) {
     res.status(401).json({ error: "Invalid or revoked API key" });
     return;
   }
 
-  // Update lastUsedAt without blocking the request
+  // Fire-and-forget update of lastUsedAt
   prisma.apiKey
-    .update({ where: { id: apiKey.id }, data: { lastUsedAt: new Date() } })
-    .catch(() => {
-      // Non-fatal — log in production but don't fail the request
-    });
+    .update({
+      where: { id: record.id },
+      data: { lastUsedAt: new Date() },
+    })
+    .catch(() => {});
 
-  req.user = apiKey.user;
+  // Attach full user object same shape as requireAuth, minus passwordHash
+  const { passwordHash, ...safeUser } = record.user;
+  req.user = safeUser as any;
+  req.apiKeyId = record.id;
+
   next();
 }
