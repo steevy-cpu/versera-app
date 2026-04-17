@@ -593,21 +593,24 @@ curl https://api.versera.dev/v1/prompts \\
           <p className="text-zinc-600">Credits never expire. Purchase more at any time from your billing dashboard.</p>
 
           {/* ── NODE.JS SDK ── */}
-          <div className="flex items-center gap-3 mt-12 mb-2">
-            <SectionHeading id="nodejs-sdk" className="!mt-0 !mb-0">Node.js SDK</SectionHeading>
-            <span
-              className="inline-flex items-center font-mono"
-              style={{
-                backgroundColor: "rgba(16,185,129,0.1)",
-                color: "#10b981",
-                fontSize: "11px",
-                borderRadius: "4px",
-                padding: "2px 8px",
-              }}
-            >
-              v0.1.1
+          <SectionHeading id="nodejs-sdk">
+            <span className="inline-flex items-center gap-3">
+              Node.js SDK
+              <span
+                className="inline-flex items-center font-mono align-middle"
+                style={{
+                  backgroundColor: "rgba(16,185,129,0.1)",
+                  color: "#10b981",
+                  fontSize: "11px",
+                  borderRadius: "4px",
+                  padding: "2px 8px",
+                  fontWeight: 500,
+                }}
+              >
+                v0.1.1
+              </span>
             </span>
-          </div>
+          </SectionHeading>
           <p className="text-zinc-500 mb-4">The official JavaScript and TypeScript SDK for Versera</p>
 
           <div className="flex items-center gap-3 mb-3">
