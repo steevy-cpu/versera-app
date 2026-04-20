@@ -1,0 +1,49 @@
+# Versera
+
+> Versera is prompt version control for LLM applications. Developers store prompts in a versioned API, resolve them at runtime with variable injection, and rollback instantly when something breaks — no redeploy required.
+
+Versera gives developers building on Claude, GPT, Gemini, and other large language models Git-style versioning for their prompts. Free tier includes 1,000 credits on signup. Works with any LLM — the resolve endpoint returns a rendered string that can be passed to any inference API.
+
+## Getting started
+
+- [Home](https://versera.dev): Product overview, use cases, pricing
+- [Sign up free](https://versera.dev/signup): Create an account, 1,000 free credits
+- [Interactive documentation](https://versera.dev/docs): Complete API reference with live tester
+
+## API and SDK
+
+- [REST API base URL](https://api.versera.dev): All endpoints under this base
+- [Node.js SDK](https://www.npmjs.com/package/versera-app): Install with npm install versera-app. One API key works for resolve, push, list, get, saveVersion, and rollback.
+- [Working example repo](https://github.com/steevy-cpu/versera-claude-example): Complete Versera + Claude chatbot in 20 lines of code
+
+## Core API endpoints
+
+- [GET /v1/resolve/:slug](https://versera.dev/docs#resolve): Resolve a prompt at runtime with variable injection (1 credit per call)
+- [POST /v1/prompts](https://versera.dev/docs#prompts): Create a new prompt
+- [GET /v1/prompts](https://versera.dev/docs#list-prompts): List all your prompts
+- [POST /v1/prompts/:slug/versions/:n/rollback](https://versera.dev/docs#rollback): Roll back to a previous version instantly
+
+## Pricing
+
+- Free: 1,000 credits on signup, no credit card required
+- Starter: $9 for 10,000 credits
+- Growth: $49 for 100,000 credits
+- Scale: $199 for 500,000 credits
+- Credits never expire. 1 credit = 1 resolve call.
+
+## Use cases
+
+- Chatbots and AI assistants — version system prompts without redeploying
+- Document summarizers — tune prompts while serving traffic
+- Content classifiers — rollback when accuracy drops
+- Email and content generators — let non-devs update prompts from the dashboard
+
+## Legal
+
+- [Terms of Service](https://versera.dev/terms)
+- [Privacy Policy](https://versera.dev/privacy)
+
+## Optional
+
+- [GitHub](https://github.com/steevy-cpu/versera-app): Main repo
+- [Support email](mailto:hello@versera.dev)
