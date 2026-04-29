@@ -60,42 +60,71 @@ router.post("/run", async (req: Request, res: Response): Promise<void> => {
   const apiKey = decrypt(stored.keyHash);
 
   if (model === "claude") {
-    const { default: Anthropic } = await import("@anthropic-ai/sdk");
-    const client = new Anthropic({ apiKey });
     const startTime = Date.now();
-    const message = await client.messages.create({
-      model: "claude-sonnet-4-6",
-      max_tokens: 4096,
-      messages: [{ role: "user", content: renderedPrompt }],
+    const resp = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": apiKey,
+        "anthropic-version": "2023-06-01",
+      },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-6",
+        max_tokens: 4096,
+        messages: [{ role: "user", content: renderedPrompt }],
+      }),
     });
-    const output =
-      message.content[0].type === "text" ? message.content[0].text : "";
+    if (!resp.ok) {
+      const err = await resp.json().catch(() => ({}));
+      res.status(502).json({ error: "Anthropic API error", detail: err });
+      return;
+    }
+    const data = (await resp.json()) as {
+      model: string;
+      content: { type: string; text: string }[];
+      usage: { input_tokens: number; output_tokens: number };
+    };
+    const output = data.content[0]?.text ?? "";
     res.json({
       output,
-      model: message.model,
+      model: data.model,
       provider: "anthropic",
       latencyMs: Date.now() - startTime,
-      tokenCount: message.usage.input_tokens + message.usage.output_tokens,
+      tokenCount: data.usage.input_tokens + data.usage.output_tokens,
       renderedPrompt,
     });
     return;
   }
 
   if (model === "gpt") {
-    const { default: OpenAI } = await import("openai");
-    const client = new OpenAI({ apiKey });
     const startTime = Date.now();
-    const completion = await client.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [{ role: "user", content: renderedPrompt }],
+    const resp = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: "gpt-4o-mini",
+        messages: [{ role: "user", content: renderedPrompt }],
+      }),
     });
-    const choice = completion.choices[0];
+    if (!resp.ok) {
+      const err = await resp.json().catch(() => ({}));
+      res.status(502).json({ error: "OpenAI API error", detail: err });
+      return;
+    }
+    const data = (await resp.json()) as {
+      model: string;
+      choices: { message: { content: string } }[];
+      usage: { total_tokens: number };
+    };
     res.json({
-      output: choice.message.content ?? "",
-      model: completion.model,
+      output: data.choices[0]?.message.content ?? "",
+      model: data.model,
       provider: "openai",
       latencyMs: Date.now() - startTime,
-      tokenCount: completion.usage?.total_tokens ?? 0,
+      tokenCount: data.usage?.total_tokens ?? 0,
       renderedPrompt,
     });
     return;
