@@ -9,6 +9,7 @@ import { Copy } from "lucide-react";
 import { ChevronRight } from "lucide-react";
 import { usePrompt, useSaveVersion } from "@/hooks/usePrompts";
 import { useToast } from "@/hooks/use-toast";
+import { PromptPlayground } from "@/components/PromptPlayground";
 
 const envTabs = ["dev", "staging", "prod"] as const;
 
@@ -39,6 +40,7 @@ export default function PromptEditor() {
 
   const [template, setTemplate] = useState("");
   const [message, setMessage] = useState("");
+  const [playgroundOpen, setPlaygroundOpen] = useState(false);
 
   // Populate template when prompt loads
   useEffect(() => {
@@ -144,68 +146,83 @@ export default function PromptEditor() {
             <Button onClick={handleSave} disabled={isSaving}>
               {isSaving ? "Saving…" : "Save as new version"}
             </Button>
+            <Button variant="outline" onClick={() => setPlaygroundOpen(true)}>
+              Test in playground
+            </Button>
           </div>
         </div>
 
-        {/* Metadata — 2/5 */}
-        <div className="lg:col-span-2 space-y-4">
-          <Card className="shadow-none">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Current Version</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-3xl font-bold">v{currentVersion?.version ?? "—"}</p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                {currentVersion?.savedAt
-                  ? new Date(currentVersion.savedAt).toLocaleString()
-                  : "—"}
-              </p>
-              <button
-                onClick={() => navigate(`/prompts/${slug}/versions`)}
-                className="mt-2 text-sm font-medium text-primary hover:underline"
-              >
-                View history
-              </button>
-            </CardContent>
-          </Card>
-
-          <Card className="shadow-none">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Detected Variables</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-wrap gap-2">
-              {variables.length === 0 ? (
-                <p className="text-xs text-muted-foreground">No variables detected</p>
-              ) : (
-                variables.map((v) => (
-                  <Badge
-                    key={v}
-                    variant="secondary"
-                    className="bg-primary/10 text-primary border-primary/20 border font-mono text-xs"
-                  >
-                    {v}
-                  </Badge>
-                ))
-              )}
-            </CardContent>
-          </Card>
-
-          <Card className="shadow-none">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Quick Resolve</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between rounded-md bg-muted px-3 py-2">
-                <code className="font-mono text-xs">
-                  GET /v1/resolve/{prompt.slug}
-                </code>
-                <button onClick={copySnippet} className="ml-2 text-muted-foreground hover:text-foreground">
-                  <Copy className="h-3.5 w-3.5" />
+        {playgroundOpen ? (
+          <div className="lg:col-span-2">
+            <PromptPlayground
+              promptId={prompt.id}
+              slug={prompt.slug}
+              template={template}
+              onTemplateChange={setTemplate}
+              onClose={() => setPlaygroundOpen(false)}
+            />
+          </div>
+        ) : (
+          /* Metadata — 2/5 */
+          <div className="lg:col-span-2 space-y-4">
+            <Card className="shadow-none">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium">Current Version</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-3xl font-bold">v{currentVersion?.version ?? "—"}</p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {currentVersion?.savedAt
+                    ? new Date(currentVersion.savedAt).toLocaleString()
+                    : "—"}
+                </p>
+                <button
+                  onClick={() => navigate(`/prompts/${slug}/versions`)}
+                  className="mt-2 text-sm font-medium text-primary hover:underline"
+                >
+                  View history
                 </button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+              </CardContent>
+            </Card>
+
+            <Card className="shadow-none">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium">Detected Variables</CardTitle>
+              </CardHeader>
+              <CardContent className="flex flex-wrap gap-2">
+                {variables.length === 0 ? (
+                  <p className="text-xs text-muted-foreground">No variables detected</p>
+                ) : (
+                  variables.map((v) => (
+                    <Badge
+                      key={v}
+                      variant="secondary"
+                      className="bg-primary/10 text-primary border-primary/20 border font-mono text-xs"
+                    >
+                      {v}
+                    </Badge>
+                  ))
+                )}
+              </CardContent>
+            </Card>
+
+            <Card className="shadow-none">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium">Quick Resolve</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between rounded-md bg-muted px-3 py-2">
+                  <code className="font-mono text-xs">
+                    GET /v1/resolve/{prompt.slug}
+                  </code>
+                  <button onClick={copySnippet} className="ml-2 text-muted-foreground hover:text-foreground">
+                    <Copy className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -11,6 +11,7 @@ import apiKeyRoutes from "./routes/apiKeys";
 import billingRoutes, { stripeWebhook } from "./routes/billing";
 import adminRoutes from "./routes/admin";
 import testimonialRoutes from "./routes/testimonials";
+import playgroundRoutes from "./routes/playground";
 
 const app = express();
 const PORT = process.env.PORT ?? 3001;
@@ -60,6 +61,7 @@ app.use("/v1/api-keys", apiKeyRoutes);
 app.use("/v1/billing", billingRoutes);
 app.use("/v1/admin", adminRoutes);
 app.use("/v1/testimonials", testimonialRoutes);
+app.use("/v1/playground", playgroundRoutes);
 
 // ─── Health check ─────────────────────────────────────────────────────────────
 

@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import { requireAuth } from "../middleware/requireAuth";
 import { safeUser } from "../lib/safeUser";
 import prisma from "../lib/prisma";
+import { encrypt, decrypt } from "../lib/encryption";
 import { sendAccountDeletionEmail } from "../lib/email";
 
 const router = Router();
@@ -156,5 +157,68 @@ router.delete("/", async (req: Request, res: Response): Promise<void> => {
 
   res.status(204).send();
 });
+
+// ─── PUT /v1/me/llm-keys ─────────────────────────────────────────────────────
+
+const VALID_PROVIDERS = ["anthropic", "openai", "groq"] as const;
+type LlmProvider = (typeof VALID_PROVIDERS)[number];
+
+router.put("/llm-keys", async (req: Request, res: Response): Promise<void> => {
+  const user = req.user!;
+  const { provider, apiKey } = req.body as {
+    provider: LlmProvider;
+    apiKey: string;
+  };
+
+  if (!VALID_PROVIDERS.includes(provider)) {
+    res
+      .status(400)
+      .json({ error: `provider must be one of: ${VALID_PROVIDERS.join(", ")}` });
+    return;
+  }
+  if (!apiKey || typeof apiKey !== "string") {
+    res.status(400).json({ error: "apiKey is required" });
+    return;
+  }
+
+  const keyHash = encrypt(apiKey);
+
+  await prisma.userLlmKey.upsert({
+    where: { userId: user.id },
+    create: { userId: user.id, provider, keyHash },
+    update: { provider, keyHash },
+  });
+
+  res.json({ provider, hasKey: true });
+});
+
+// ─── GET /v1/me/llm-keys ─────────────────────────────────────────────────────
+
+router.get("/llm-keys", async (req: Request, res: Response): Promise<void> => {
+  const user = req.user!;
+
+  const keys = await prisma.userLlmKey.findMany({
+    where: { userId: user.id },
+    select: { provider: true, createdAt: true },
+  });
+
+  res.json(keys.map((k) => ({ ...k, hasKey: true })));
+});
+
+// ─── DELETE /v1/me/llm-keys/:provider ────────────────────────────────────────
+
+router.delete(
+  "/llm-keys/:provider",
+  async (req: Request, res: Response): Promise<void> => {
+    const user = req.user!;
+    const { provider } = req.params;
+
+    await prisma.userLlmKey.deleteMany({
+      where: { userId: user.id, provider },
+    });
+
+    res.status(204).send();
+  }
+);
 
 export default router;

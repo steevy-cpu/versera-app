@@ -12,7 +12,25 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { AlertTriangle, Lock } from "lucide-react";
+import { useDeleteLLMKey, useLLMKeys, useSaveLLMKey, type LLMProvider } from "@/hooks/useLLMKeys";
+import { AlertTriangle, Check, Lock } from "lucide-react";
+
+const llmProviders: Array<{ provider: LLMProvider; name: string; label: string }> = [
+  { provider: "anthropic", name: "Anthropic", label: "Claude" },
+  { provider: "openai", name: "OpenAI", label: "GPT" },
+  { provider: "groq", name: "Groq", label: "Llama" },
+];
+
+function hasConnectedKey(keys: unknown, provider: LLMProvider) {
+  if (!Array.isArray(keys)) return false;
+
+  return keys.some((key) => {
+    if (typeof key === "string") return key === provider;
+    if (!key || typeof key !== "object") return false;
+    const item = key as { provider?: string; connected?: boolean };
+    return item.provider === provider && item.connected !== false;
+  });
+}
 
 export default function Settings() {
   const cached = getUser();
@@ -32,6 +50,14 @@ export default function Settings() {
   const [pwLoading, setPwLoading] = useState(false);
   const [pwError, setPwError] = useState("");
   const [pwSuccess, setPwSuccess] = useState("");
+
+  // LLM key state
+  const { data: llmKeys } = useLLMKeys();
+  const { mutate: saveLLMKey, isPending: savingLLMKey } = useSaveLLMKey();
+  const { mutate: deleteLLMKey, isPending: deletingLLMKey } = useDeleteLLMKey();
+  const [keyProvider, setKeyProvider] = useState<LLMProvider | null>(null);
+  const [apiKey, setApiKey] = useState("");
+  const [keyError, setKeyError] = useState("");
 
   const handlePasswordChange = async () => {
     setPwError("");
@@ -91,6 +117,24 @@ export default function Settings() {
       setError(message);
       setDeleting(false);
     }
+  };
+
+  const handleSaveLLMKey = () => {
+    if (!keyProvider) return;
+
+    setKeyError("");
+    saveLLMKey(
+      { provider: keyProvider, apiKey },
+      {
+        onSuccess: () => {
+          setApiKey("");
+          setKeyProvider(null);
+        },
+        onError: (err) => {
+          setKeyError((err as { message?: string }).message ?? "Unable to save API key");
+        },
+      }
+    );
   };
 
   return (
@@ -179,6 +223,79 @@ export default function Settings() {
         </Card>
       </section>
 
+      {/* LLM API keys */}
+      <section className="space-y-3">
+        <div>
+          <h2 className="text-lg font-semibold">LLM API keys</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Connect your own provider keys to test prompts with Claude, GPT, or
+            Groq. Keys are encrypted and never sent to the frontend.
+          </p>
+        </div>
+        <Card>
+          <CardContent className="divide-y p-0">
+            {llmProviders.map((provider) => {
+              const connected = hasConnectedKey(llmKeys, provider.provider);
+
+              return (
+                <div
+                  key={provider.provider}
+                  className="flex flex-wrap items-center justify-between gap-3 p-5"
+                >
+                  <div>
+                    <p className="text-sm font-medium">
+                      {provider.name}{" "}
+                      <span className="text-muted-foreground">
+                        ({provider.label})
+                      </span>
+                    </p>
+                    {connected && (
+                      <p className="mt-1 flex items-center gap-1.5 text-xs text-emerald-500">
+                        <Check className="h-3.5 w-3.5" />
+                        Connected
+                      </p>
+                    )}
+                  </div>
+                  {connected ? (
+                    <Button
+                      variant="outline"
+                      onClick={() => deleteLLMKey(provider.provider)}
+                      disabled={deletingLLMKey}
+                    >
+                      Disconnect
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setKeyProvider(provider.provider);
+                        setApiKey("");
+                        setKeyError("");
+                      }}
+                    >
+                      Connect
+                    </Button>
+                  )}
+                </div>
+              );
+            })}
+
+            <div className="flex flex-wrap items-center justify-between gap-3 p-5">
+              <div>
+                <p className="text-sm font-medium">
+                  Google Gemini{" "}
+                  <span className="text-muted-foreground">(Gemini)</span>
+                </p>
+                <p className="mt-1 flex items-center gap-1.5 text-xs text-emerald-500">
+                  <Check className="h-3.5 w-3.5" />
+                  Versera-managed (free)
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </section>
+
       {/* Danger zone */}
       <section className="space-y-3">
         <h2 className="text-lg font-semibold">Danger zone</h2>
@@ -261,6 +378,66 @@ export default function Settings() {
             >
               Cancel
             </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* LLM key modal */}
+      <Dialog
+        open={!!keyProvider}
+        onOpenChange={(nextOpen) => {
+          if (!nextOpen) {
+            setKeyProvider(null);
+            setApiKey("");
+            setKeyError("");
+          }
+        }}
+      >
+        <DialogContent className="max-w-[440px] rounded-xl p-8">
+          <DialogHeader>
+            <DialogTitle>Connect API key</DialogTitle>
+            <DialogDescription>
+              Paste your provider key. Versera stores it encrypted and only uses
+              it for playground test runs.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium">API key</label>
+              <Input
+                type="password"
+                value={apiKey}
+                onChange={(e) => setApiKey(e.target.value)}
+                placeholder="sk-..."
+                autoComplete="off"
+                className="font-mono"
+              />
+            </div>
+
+            {keyError && (
+              <p className="text-sm text-destructive">{keyError}</p>
+            )}
+
+            <div className="flex justify-end gap-2">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setKeyProvider(null);
+                  setApiKey("");
+                  setKeyError("");
+                }}
+                disabled={savingLLMKey}
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleSaveLLMKey}
+                disabled={!apiKey.trim() || savingLLMKey}
+              >
+                {savingLLMKey ? "Connecting..." : "Connect"}
+              </Button>
+            </div>
           </div>
         </DialogContent>
       </Dialog>

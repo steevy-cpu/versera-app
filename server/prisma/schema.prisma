@@ -45,6 +45,8 @@ model User {
   apiKeys      ApiKey[]
   prompts      Prompt[]
   transactions Transaction[]
+  drafts       PromptDraft[]
+  llmKey       UserLlmKey?
 }
 
 model ApiKey {
@@ -71,6 +73,7 @@ model Prompt {
   updatedAt   DateTime      @updatedAt
 
   versions    PromptVersion[]
+  drafts      PromptDraft[]
 
   @@unique([userId, slug])
 }
@@ -110,4 +113,28 @@ model Transaction {
   amountCents Int      @default(0)  // price paid in cents (0 for usage deductions)
   stripeId    String?               // Stripe PaymentIntent or Checkout Session ID
   createdAt   DateTime @default(now())
+}
+
+model PromptDraft {
+  id        String   @id @default(cuid())
+  userId    String
+  promptId  String
+  template  String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  prompt Prompt @relation(fields: [promptId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, promptId])
+}
+
+model UserLlmKey {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  provider  String   // 'anthropic' | 'openai' | 'groq'
+  keyHash   String   @db.Text // AES-256-GCM encrypted key (iv:authTag:ciphertext, all hex)
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
